@@ -1,0 +1,59 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AudiosAmigo", "AudiosAmigo\AudiosAmigo.shproj", "{866B62D2-3B3E-444D-8E51-411EA116E56E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudiosAmigo.Droid", "AudiosAmigo.Droid\AudiosAmigo.Droid.csproj", "{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudiosAmigo.Generate", "AudiosAmigo.Generate\AudiosAmigo.Generate.csproj", "{8A6EF5C7-667B-400D-A12D-CB17AF48D779}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudiosAmigo.Windows", "AudiosAmigo.Windows\AudiosAmigo.Windows.csproj", "{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		AudiosAmigo\AudiosAmigo.projitems*{0d1637c2-3005-48fb-88e0-f2f8112fd0e1}*SharedItemsImports = 4
+		AudiosAmigo\AudiosAmigo.projitems*{866b62d2-3b3e-444d-8e51-411ea116e56e}*SharedItemsImports = 13
+		AudiosAmigo\AudiosAmigo.projitems*{8a6ef5c7-667b-400d-a12d-cb17af48d779}*SharedItemsImports = 4
+		AudiosAmigo\AudiosAmigo.projitems*{e2a5f07e-4be5-4e02-9b63-f3fe7d0d0b8a}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Debug|x64.Build.0 = Debug|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Release|x64.ActiveCfg = Release|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Release|x64.Build.0 = Release|Any CPU
+		{0D1637C2-3005-48FB-88E0-F2F8112FD0E1}.Release|x64.Deploy.0 = Release|Any CPU
+		{8A6EF5C7-667B-400D-A12D-CB17AF48D779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A6EF5C7-667B-400D-A12D-CB17AF48D779}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8A6EF5C7-667B-400D-A12D-CB17AF48D779}.Debug|x64.Build.0 = Debug|Any CPU
+		{8A6EF5C7-667B-400D-A12D-CB17AF48D779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A6EF5C7-667B-400D-A12D-CB17AF48D779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A6EF5C7-667B-400D-A12D-CB17AF48D779}.Release|x64.ActiveCfg = Release|Any CPU
+		{8A6EF5C7-667B-400D-A12D-CB17AF48D779}.Release|x64.Build.0 = Release|Any CPU
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Debug|x64.ActiveCfg = Debug|x64
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Debug|x64.Build.0 = Debug|x64
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Release|x64.ActiveCfg = Release|x64
+		{E2A5F07E-4BE5-4E02-9B63-F3FE7D0D0B8A}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

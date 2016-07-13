@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".50">
+        <EditText
+            android:id="@+id/ip"
+            android:hint="IP"
+            android:nextFocusForward="@+id/port"
+            android:imeOptions="flagNoExtractUi|actionNext"
+            android:layout_weight="0.25"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:digits="0123456789." />
+        <EditText
+            android:id="@+id/port"
+            android:hint="PORT"
+            android:nextFocusForward="@+id/password"
+            android:imeOptions="flagNoExtractUi|actionNext"
+            android:layout_weight="0.25"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:digits="0123456789" />
+        <EditText
+            android:id="@+id/password"
+            android:hint="PASSWORD (optional)"
+            android:imeOptions="flagNoExtractUi|actionDone"
+            android:layout_weight="0.25"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:layout_gravity="start" />
+        <Button
+            android:id="@+id/connect"
+            android:text="Connect"
+            android:layout_weight="0.25"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal|center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".50">
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawSelectorOnTop="false" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>866b62d2-3b3e-444d-8e51-411ea116e56e</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>AudiosAmigo</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AudioDeviceState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AudioProcessState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Command.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Communicator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)INetworkCommunication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TcpClientCommunication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Translate.cs" />
+  </ItemGroup>
+</Project>

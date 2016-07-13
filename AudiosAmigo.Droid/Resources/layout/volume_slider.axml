@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageButton
+        android:id="@+id/process_image"
+        android:gravity="top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground" />
+    <LinearLayout
+        android:id="@+id/seek_bar_holder"
+        android:background="@drawable/bg2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <audiosamigo.droid.VerticalSeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb_small"
+            android:progress="50"
+            android:gravity="top"
+            android:maxHeight="2000dp"
+            android:maxWidth="2000dp" />
+    </LinearLayout>
+</LinearLayout>

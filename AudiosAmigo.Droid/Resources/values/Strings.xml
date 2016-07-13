@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Hello">Hello World, Click Me!</string>
+    <string name="ApplicationName">AudiosAmigoClinet</string>
+    <color name="bg">#1d30a6</color>
+    <color name="bgdarker">#1f3faf</color>
+</resources>
