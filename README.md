@@ -9,7 +9,7 @@ The Windows application interfaces with the [NAudio](https://github.com/naudio/N
 ### Overview
 
 This solution contains four sub-projects:
- - **AudiosAmigo** A shared library which all projects in the solution need to reference.
+ - **AudiosAmigo** A shared project which all projects in the solution need to reference.
  - **AudiosAmigo.Generate** Used to generate the main application interface used by both the Windows and Android applications. These files are linked in the `AudiosAmigo.Droid/Links` and `AudiosAmigo.Windows/Links` directories.
  - **AudiosAmigo.Windows** Contains the desktop application which controls the audio via Windows API
  - **AudiosAmigo.Droid** Contains the android application which provides a user interface to the system.
