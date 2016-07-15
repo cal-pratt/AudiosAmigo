@@ -14,8 +14,14 @@ namespace AudiosAmigo.Windows
         {
             try
             {
+                UdpUtil.ReceivePortInfo(Constants.ServerBroadcastListenerPort)
+                    .ObserveOn(NewThreadScheduler.Default)
+                    .SubscribeOn(NewThreadScheduler.Default)
+                    .Subscribe(UdpUtil.IntWriter(Constants.DefaultServerTcpListenerPort));
+
                 var counter = 0;
-                ClientAcceptor.From(12345).ObserveOn(NewThreadScheduler.Default)
+                ClientAcceptor.From(Constants.DefaultServerTcpListenerPort)
+                    .ObserveOn(NewThreadScheduler.Default).SubscribeOn(NewThreadScheduler.Default)
                     .Select(client => new TcpClientCommunication(client))
                     .Scan((INetworkCommunication) null, (last, next) =>
                     {
