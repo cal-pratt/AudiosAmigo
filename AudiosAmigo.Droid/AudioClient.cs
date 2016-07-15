@@ -20,6 +20,8 @@ namespace AudiosAmigo.Droid
 
         private readonly LinearLayout _systemSliders;
 
+        private readonly TextView _status;
+
         private const float WidthPercent = 0.18f;
 
         private readonly Dictionary<Tuple<string, int>, AudioProcessController> _processControllers;
@@ -37,6 +39,7 @@ namespace AudiosAmigo.Droid
             _normalSliders = _activity.FindViewById<LinearLayout>(Resource.Id.normal_sliders);
             _masterSliders = _activity.FindViewById<LinearLayout>(Resource.Id.master_sliders);
             _systemSliders = _activity.FindViewById<LinearLayout>(Resource.Id.system_sliders);
+            _status = _activity.FindViewById<TextView>(Resource.Id.status);
             _deviceButtons = new Dictionary<string, ImageButton>();
             _processControllers = new Dictionary<Tuple<string, int>, AudioProcessController>();
             _deviceControllers = new Dictionary<string, AudioDeviceController>();
@@ -64,6 +67,7 @@ namespace AudiosAmigo.Droid
                 else
                 {
                     _processControllers[key]?.Update(state);
+                    UpdateStatus(state.Name, state.Volume, state.Mute);
                 }
             });
         }
@@ -81,6 +85,7 @@ namespace AudiosAmigo.Droid
                 else
                 {
                     _deviceControllers[state.Name]?.Update(state);
+                    UpdateStatus(state.Name, state.Volume, state.Mute);
                 }
             });
         }
@@ -118,6 +123,7 @@ namespace AudiosAmigo.Droid
                     _normalSliders.AddView(_processControllers[key].Parent);
                 }
                 _processControllers[key].Subscribe(SendUpdateProcessCommand);
+                _processControllers[key].Subscribe(s => UpdateStatus(s.Name, s.Volume, s.Mute));
                 if (_activeDevice != state.Device)
                 {
                     _processControllers[key].Parent.Visibility = ViewStates.Gone;
@@ -139,6 +145,7 @@ namespace AudiosAmigo.Droid
                     _activity, state, sliderWidth, sliderHeight, bitmap);
 
                 _deviceControllers[state.Name].Subscribe(SendUpdateDeviceCommand);
+                _deviceControllers[state.Name].Subscribe(s => UpdateStatus(s.Name, s.Volume, s.Mute));
                 _masterSliders.AddView(_deviceControllers[state.Name].Parent);
                 _deviceControllers[state.Name].Parent.Visibility = ViewStates.Gone;
 
@@ -192,6 +199,15 @@ namespace AudiosAmigo.Droid
         public override void OnCompleted()
         {
             throw new NotImplementedException();
+        }
+
+        private void UpdateStatus(string name, float volume, bool mute)
+        {
+            _activity.RunOnUiThread(() =>
+            {
+                var vol = mute ? 0 : (int)(volume * 100);
+                _status.Text = $"{name}, {vol}%";
+            });
         }
     }
 }

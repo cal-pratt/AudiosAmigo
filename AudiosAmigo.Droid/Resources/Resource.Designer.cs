@@ -145,17 +145,20 @@ namespace AudiosAmigo.Droid
 			// aapt resource value: 0x7f060001
 			public const int port = 2131099649;
 			
-			// aapt resource value: 0x7f06000d
-			public const int process_image = 2131099661;
+			// aapt resource value: 0x7f06000e
+			public const int process_image = 2131099662;
+			
+			// aapt resource value: 0x7f060010
+			public const int seek_bar = 2131099664;
 			
 			// aapt resource value: 0x7f06000f
-			public const int seek_bar = 2131099663;
-			
-			// aapt resource value: 0x7f06000e
-			public const int seek_bar_holder = 2131099662;
+			public const int seek_bar_holder = 2131099663;
 			
 			// aapt resource value: 0x7f060007
 			public const int slider_scroll = 2131099655;
+			
+			// aapt resource value: 0x7f06000d
+			public const int status = 2131099661;
 			
 			// aapt resource value: 0x7f06000a
 			public const int system_sliders = 2131099658;
