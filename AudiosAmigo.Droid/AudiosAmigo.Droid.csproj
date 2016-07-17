@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="ObservableClickListener.cs" />
     <Compile Include="ObservableOnItemClickListener.cs" />
+    <Compile Include="ObservableOnItemLongClickListener.cs" />
     <Compile Include="ObservableOnTouchListener.cs" />
     <Compile Include="ObservableSeekBarListener.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
