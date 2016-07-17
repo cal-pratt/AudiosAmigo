@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Hello">Hello World, Click Me!</string>
-    <string name="ApplicationName">AudiosAmigoClinet</string>
-    <color name="bg">#1d30a6</color>
-    <color name="bgdarker">#1f3faf</color>
+    <string name="ApplicationName">Audio\'s Amigo</string>
+    <string name="connect_menu_ip_hint">IP</string>
+    <string name="connect_menu_port_hint">PORT</string>
+    <string name="connect_menu_password_hint">PASSWORD (optional)</string>
+    <string name="connect_menu_welcome_message">Welcome to Audio\'s Amigo! To use this application, you must first install the desktop application.\n\nIf you haven\'t already done so, you can find the installer at http://www.getawebsite.com</string>
+    <string name="connect_menu_connect_text">Connect</string>
+    <string name="connect_menu_save_text">Save</string>
+    <string name="connect_menu_search_text">Scan Network</string>
+    <string name="connect_menu_search_list_text">Scanned Sessions</string>
+    <string name="connect_menu_save_list_text">Saved Sessions</string>
 </resources>
