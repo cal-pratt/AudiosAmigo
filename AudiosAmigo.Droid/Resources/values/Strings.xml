@@ -10,4 +10,6 @@
     <string name="connect_menu_search_text">Scan Network</string>
     <string name="connect_menu_search_list_text">Scanned Sessions</string>
     <string name="connect_menu_save_list_text">Saved Sessions</string>
+
+    <string name="preference_save_file_key">AudiosAmigoSavedSessions</string>
 </resources>

@@ -227,6 +227,9 @@ namespace AudiosAmigo.Droid
 			// aapt resource value: 0x7f040004
 			public const int connect_menu_welcome_message = 2130968580;
 			
+			// aapt resource value: 0x7f04000a
+			public const int preference_save_file_key = 2130968586;
+			
 			static String()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
