@@ -14,35 +14,42 @@ namespace AudiosAmigo.Droid
     {
         public static IObservable<Tuple<string, int>> FromDiaglog(Activity activity)
         {
-            var dialog = new Dialog(activity, Android.Resource.Style.ThemeHolo);
+            var dialog = new Dialog(activity, Android.Resource.Style.ThemeHoloNoActionBar);
             dialog.Window.SetSoftInputMode(SoftInput.AdjustPan);
             dialog.SetContentView(Resource.Layout.connect_menu);
             dialog.SetCancelable(false);
-            dialog.SetTitle("    Enter Desktop Information");
 
             var ip = dialog.FindViewById<EditText>(Resource.Id.ip);
             var port = dialog.FindViewById<EditText>(Resource.Id.port);
             var password = dialog.FindViewById<EditText>(Resource.Id.password);
             var connect = dialog.FindViewById<Button>(Resource.Id.connect);
+            var search = dialog.FindViewById<Button>(Resource.Id.search);
 
             var adapter = new ArrayAdapter(
                 activity, 
                 Android.Resource.Layout.SimpleListItem1,
                 new List<Java.Lang.String>());
 
-            var ipListView = dialog.FindViewById<ListView>(Resource.Id.list);
+            var ipListView = dialog.FindViewById<ListView>(Resource.Id.search_list);
             ipListView.Adapter = adapter;
 
+            var ipSet = new HashSet<Java.Lang.String>();
             UdpUtil.ReceivePortInfo(Constants.ClientBroadcastListenerPort)
                 .ObserveOn(NewThreadScheduler.Default)
                 .SubscribeOn(NewThreadScheduler.Default)
-                .Subscribe(endpoint => activity.RunOnUiThread(() =>
+                .Select(endpoint => new Java.Lang.String($"{endpoint.Address}:{endpoint.Port}"))
+                .Subscribe(session => activity.RunOnUiThread(() =>
                 {
-                    adapter.Add(new Java.Lang.String($"{endpoint.Address}:{endpoint.Port}"));
-                    adapter.NotifyDataSetChanged();
+                    if (ipSet.Add(session))
+                    {
+                        adapter.Add(session);
+                        adapter.NotifyDataSetChanged();
+                    }
                 }));
 
-            NewThreadScheduler.Default.Schedule(() =>
+            var observableSearch = new ObservableClickListener(search);
+            observableSearch.Subscribe(pressed => adapter.Clear());
+            observableSearch.SubscribeOn(NewThreadScheduler.Default).Subscribe(pressed =>
             {
                 UdpUtil.IntWriter(Constants.ClientBroadcastListenerPort).Invoke(
                     new IPEndPoint(IPAddress.Broadcast, Constants.ServerBroadcastListenerPort));
@@ -55,17 +62,17 @@ namespace AudiosAmigo.Droid
                 port.Text = split[1];
             });
 
-            var observableButton = new ObservableClickListener(connect)
+            var observableConnect = new ObservableClickListener(connect)
                 .Where(pressed => ip.Text != "" && Regex.IsMatch(port.Text, @"^\d+$"));
 
             dialog.Show();
 
-            observableButton.Subscribe(pressed =>
+            observableConnect.Subscribe(pressed =>
             {
                 dialog.Hide();
             });
 
-            return observableButton.Select(pressed => Tuple.Create(ip.Text, int.Parse(port.Text)));
+            return observableConnect.Select(pressed => Tuple.Create(ip.Text, int.Parse(port.Text)));
         }
     }
 }
