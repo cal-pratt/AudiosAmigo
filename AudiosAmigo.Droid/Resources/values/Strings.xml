@@ -10,6 +10,10 @@
     <string name="connect_menu_search_text">Scan Network</string>
     <string name="connect_menu_search_list_text">Scanned Sessions</string>
     <string name="connect_menu_save_list_text">Saved Sessions</string>
+    <string name="connect_menu_confirm_delete_title">Confirm delete</string>
+    <string name="connect_menu_confirm_delete_pos">Delete</string>
+    <string name="connect_menu_confirm_delete_neg">Cancel</string>
+    <string name="connect_menu_confirm_delete_msg">Delete saved session from list?</string>
 
     <string name="preference_save_file_key">AudiosAmigoSavedSessions</string>
 </resources>

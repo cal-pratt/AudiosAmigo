@@ -200,6 +200,18 @@ namespace AudiosAmigo.Droid
 			// aapt resource value: 0x7f040000
 			public const int ApplicationName = 2130968576;
 			
+			// aapt resource value: 0x7f04000d
+			public const int connect_menu_confirm_delete_msg = 2130968589;
+			
+			// aapt resource value: 0x7f04000c
+			public const int connect_menu_confirm_delete_neg = 2130968588;
+			
+			// aapt resource value: 0x7f04000b
+			public const int connect_menu_confirm_delete_pos = 2130968587;
+			
+			// aapt resource value: 0x7f04000a
+			public const int connect_menu_confirm_delete_title = 2130968586;
+			
 			// aapt resource value: 0x7f040005
 			public const int connect_menu_connect_text = 2130968581;
 			
@@ -227,8 +239,8 @@ namespace AudiosAmigo.Droid
 			// aapt resource value: 0x7f040004
 			public const int connect_menu_welcome_message = 2130968580;
 			
-			// aapt resource value: 0x7f04000a
-			public const int preference_save_file_key = 2130968586;
+			// aapt resource value: 0x7f04000e
+			public const int preference_save_file_key = 2130968590;
 			
 			static String()
 			{

@@ -102,6 +102,28 @@ namespace AudiosAmigo.Droid
                     saveAdapter.NotifyDataSetChanged();
                 });
 
+            new ObservableOnItemLongClickListener<Java.Lang.String>(saveListView)
+                .Subscribe(item =>
+                {
+                    var deleteBuilder = new AlertDialog.Builder(activity);
+                    var title = activity.GetString(Resource.String.connect_menu_confirm_delete_title);
+                    var pos = activity.GetString(Resource.String.connect_menu_confirm_delete_pos);
+                    var neg = activity.GetString(Resource.String.connect_menu_confirm_delete_neg);
+                    var msg = activity.GetString(Resource.String.connect_menu_confirm_delete_msg);
+                    deleteBuilder.SetTitle(title);
+                    deleteBuilder.SetMessage(msg);
+                    deleteBuilder.SetPositiveButton(pos, (senderAlert, args) =>
+                    {
+                        var session = (string) item;
+                        sharedPref.Edit().Remove(session).Commit();
+                        saveAdapter.Remove(item);
+                        saveAdapter.NotifyDataSetChanged();
+                    });
+                    deleteBuilder.SetNegativeButton(neg, (senderAlert, args) => { });
+                    var deleteDialog = deleteBuilder.Create();
+                    deleteDialog.Show();
+                });
+
             #endregion
 
             new ObservableOnItemClickListener<Java.Lang.String>(searchListView)
