@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_connect_menu">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
@@ -10,10 +11,10 @@
         android:layout_weight=".50">
         <EditText
             android:id="@+id/ip"
-            android:hint="IP"
+            android:hint="@string/connect_menu_ip_hint"
             android:nextFocusForward="@+id/port"
             android:imeOptions="flagNoExtractUi|actionNext"
-            android:layout_weight="0.25"
+            android:layout_weight="0.17"
             android:layout_height="0dp"
             android:layout_width="match_parent"
             android:gravity="center_horizontal|center_vertical"
@@ -22,10 +23,10 @@
             android:digits="0123456789." />
         <EditText
             android:id="@+id/port"
-            android:hint="PORT"
+            android:hint="@string/connect_menu_port_hint"
             android:nextFocusForward="@+id/password"
             android:imeOptions="flagNoExtractUi|actionNext"
-            android:layout_weight="0.25"
+            android:layout_weight="0.17"
             android:layout_height="0dp"
             android:layout_width="match_parent"
             android:gravity="center_horizontal|center_vertical"
@@ -34,32 +35,100 @@
             android:digits="0123456789" />
         <EditText
             android:id="@+id/password"
-            android:hint="PASSWORD (optional)"
+            android:hint="@string/connect_menu_password_hint"
             android:imeOptions="flagNoExtractUi|actionDone"
-            android:layout_weight="0.25"
+            android:layout_weight="0.18"
             android:layout_height="0dp"
             android:layout_width="match_parent"
             android:gravity="center_horizontal|center_vertical"
             android:inputType="textPassword"
             android:singleLine="true"
             android:layout_gravity="start" />
-        <Button
-            android:id="@+id/connect"
-            android:text="Connect"
-            android:layout_weight="0.25"
+        <TextView
+            android:enabled="false"
+            android:id="@+id/welcome"
+            android:text="@string/connect_menu_welcome_message"
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@android:color/white"
+            android:layout_weight="0.32" />
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:gravity="center_horizontal|center_vertical" />
+            android:layout_height="0dp"
+            android:layout_weight=".16">
+            <Button
+                android:id="@+id/connect"
+                android:text="@string/connect_menu_connect_text"
+                android:layout_weight="0.50"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:gravity="center_horizontal|center_vertical" />
+            <Button
+                android:id="@+id/save"
+                android:text="@string/connect_menu_save_text"
+                android:layout_weight="0.50"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:gravity="center_horizontal|center_vertical" />
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight=".50">
-        <ListView
-            android:id="@+id/list"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:drawSelectorOnTop="false" />
+            android:layout_height="0dp"
+            android:layout_weight=".42"
+            android:showDividers="middle"
+            android:divider="@drawable/hdivider">
+            <TextView
+                android:enabled="false"
+                android:text="@string/connect_menu_save_list_text"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@android:color/white"
+                android:layout_weight="0.2" />
+            <ListView
+                android:id="@+id/save_list"
+                android:layout_weight="0.80"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:drawSelectorOnTop="false" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".42"
+            android:showDividers="middle"
+            android:divider="@drawable/hdivider">
+            <TextView
+                android:enabled="false"
+                android:text="@string/connect_menu_search_list_text"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@android:color/white"
+                android:layout_weight="0.2" />
+            <ListView
+                android:id="@+id/search_list"
+                android:layout_weight="0.80"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:drawSelectorOnTop="false" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/search"
+            android:text="@string/connect_menu_search_text"
+            android:layout_weight="0.16"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal|center_vertical" />
     </LinearLayout>
 </LinearLayout>
