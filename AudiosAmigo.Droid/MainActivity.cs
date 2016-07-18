@@ -23,16 +23,18 @@ namespace AudiosAmigo.Droid
             connectInfo.Subscribe(
                 info => ipAddress.Text = $"{info.Item1}:{info.Item2}");
             connectInfo.ObserveOn(NewThreadScheduler.Default).Subscribe(
-                info => Connect(info.Item1, info.Item2));
+                info => Connect(info.Item1, info.Item2, info.Item3));
 
             var disconnect = FindViewById<Button>(Resource.Id.disconnect);
             new ObservableClickListener(disconnect).Subscribe(pressed => Recreate());
         }
 
-        public void Connect(string ip, int port)
+        public void Connect(string ip, int port, string password)
         {
             var client = new TcpClient(ip, port);
-            var communication = new TcpClientCommunication(client);
+            var communication = new SecureTcpClientCommunication(
+                new TcpClientCommunication(client),
+                new Encrpytion(password, Constants.EncrpytionInitVector));
             var communicator = new Communicator<Command>(
                 communication, NewThreadScheduler.Default);
             var handler = new AudioClient(this);
