@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -15,6 +16,16 @@ namespace AudiosAmigo
         public static byte[] StringToByteArray(string str)
         {
             return Encoding.UTF8.GetBytes(str);
+        }
+
+        public static string ByteArrayToBase64String(byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes);
+        }
+
+        public static byte[] Base64StringToByteArray(string str)
+        {
+            return Convert.FromBase64String(str);
         }
 
         public static string ObjectToString<T>(T obj)
