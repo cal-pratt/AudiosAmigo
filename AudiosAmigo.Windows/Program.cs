@@ -22,7 +22,9 @@ namespace AudiosAmigo.Windows
                 var counter = 0;
                 ClientAcceptor.From(Constants.DefaultServerTcpListenerPort)
                     .ObserveOn(NewThreadScheduler.Default).SubscribeOn(NewThreadScheduler.Default)
-                    .Select(client => new TcpClientCommunication(client))
+                    .Select(client => new SecureTcpClientCommunication(
+                        new TcpClientCommunication(client),
+                        new Encrpytion(Constants.DefaultSessionPassword, Constants.EncrpytionInitVector)))
                     .Scan((INetworkCommunication) null, (last, next) =>
                     {
                         last?.Close();

@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using Android.App;
 using Android.Content;
+using Android.Provider;
 using Android.Views;
 using Android.Widget;
 
@@ -13,7 +14,7 @@ namespace AudiosAmigo.Droid
 {
     public class ConnectionInformation
     {
-        public static IObservable<Tuple<string, int>> FromDiaglog(Activity activity)
+        public static IObservable<Tuple<string, int, string>> FromDiaglog(Activity activity)
         {
             var dialog = new Dialog(activity, Android.Resource.Style.ThemeHoloNoActionBar);
             dialog.Window.SetSoftInputMode(SoftInput.AdjustPan);
@@ -71,17 +72,28 @@ namespace AudiosAmigo.Droid
                     new IPEndPoint(IPAddress.Broadcast, Constants.ServerBroadcastListenerPort));
             });
 
+            new ObservableOnItemClickListener<Java.Lang.String>(searchListView)
+                .Subscribe(item =>
+                {
+                    var split = item.Split(":");
+                    ip.Text = split[0];
+                    port.Text = split[1];
+                    password.Text = "";
+                });
+
             #endregion
 
             #region save
 
+            var id = Settings.Secure.GetString(activity.ContentResolver, Settings.Secure.AndroidId);
+            var passEncrpytion = new Encrpytion(id, Constants.EncrpytionInitVector);
             var sharedPref = activity.GetSharedPreferences(
                 activity.GetString(Resource.String.preference_save_file_key), FileCreationMode.Private);
 
             var saveList = new List<Java.Lang.String>();
-            foreach (var session in sharedPref.All.Values)
+            foreach (var session in sharedPref.All.Keys)
             {
-                saveList.Add(new Java.Lang.String((string) session));
+                saveList.Add(new Java.Lang.String(session));
             }
 
             var saveAdapter = new ArrayAdapter(
@@ -94,16 +106,22 @@ namespace AudiosAmigo.Droid
             new ObservableClickListener(save)
                 .Where(pressed => ip.Text != "" && Regex.IsMatch(port.Text, @"^\d+$"))
                 .Select(pressed => $"{ip.Text}:{port.Text}")
-                .Where(session => !sharedPref.Contains(session))
                 .Subscribe(session =>
                 {
-                    sharedPref.Edit().PutString(session, session).Commit();
-                    saveAdapter.Add(new Java.Lang.String(session));
-                    saveAdapter.NotifyDataSetChanged();
+                    if (!sharedPref.Contains(session))
+                    {
+                        saveAdapter.Add(new Java.Lang.String(session));
+                        saveAdapter.NotifyDataSetChanged();
+                    }
+                    var pass = Translate.ByteArrayToBase64String(
+                        passEncrpytion.Encrypt(
+                            Translate.StringToByteArray(
+                                password.Text)));
+                    sharedPref.Edit().PutString(session, pass).Commit();
                 });
 
             new ObservableOnItemLongClickListener<Java.Lang.String>(saveListView)
-                .Subscribe(item =>
+                .Subscribe(item => 
                 {
                     var deleteBuilder = new AlertDialog.Builder(activity);
                     var title = activity.GetString(Resource.String.connect_menu_confirm_delete_title);
@@ -124,16 +142,20 @@ namespace AudiosAmigo.Droid
                     deleteDialog.Show();
                 });
 
-            #endregion
-
-            new ObservableOnItemClickListener<Java.Lang.String>(searchListView)
-                .Merge(new ObservableOnItemClickListener<Java.Lang.String>(saveListView))
+            new ObservableOnItemClickListener<Java.Lang.String>(saveListView)
                 .Subscribe(item =>
                 {
+                    var pass = Translate.ByteArrayToString(
+                        passEncrpytion.Decrypt(
+                            Translate.Base64StringToByteArray(
+                                sharedPref.GetString((string) item, ""))));
                     var split = item.Split(":");
                     ip.Text = split[0];
                     port.Text = split[1];
+                    password.Text = pass;
                 });
+
+            #endregion
 
             var observableConnect = new ObservableClickListener(connect)
                 .Where(pressed => ip.Text != "" && Regex.IsMatch(port.Text, @"^\d+$"));
@@ -145,7 +167,8 @@ namespace AudiosAmigo.Droid
                 dialog.Hide();
             });
 
-            return observableConnect.Select(pressed => Tuple.Create(ip.Text, int.Parse(port.Text)));
+            return observableConnect.Select(pressed => Tuple.Create(ip.Text, int.Parse(port.Text), 
+                password.Text == "" ? Constants.DefaultSessionPassword : password.Text));
         }
     }
 }

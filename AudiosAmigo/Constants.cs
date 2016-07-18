@@ -7,5 +7,9 @@
         public static int ClientBroadcastListenerPort => 12346;
 
         public static int DefaultServerTcpListenerPort => 12347;
+
+        public static string EncrpytionInitVector => "AudiosAmigoIVStr";
+
+        public static string DefaultSessionPassword => "AudiosAmigoDefault";
     }
 }

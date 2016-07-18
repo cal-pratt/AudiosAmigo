@@ -15,15 +15,20 @@ namespace AudiosAmigo
 
         public string Receive()
         {
+            return Translate.ByteArrayToString(ReceiveBytes());
+        }
+
+        public byte[] ReceiveBytes()
+        {
             var sizeBytes = new byte[4];
             if (_stream.Read(sizeBytes, 0, sizeBytes.Length) == -1)
             {
-                return "";
+                return new byte[] {};
             }
             var size = BitConverter.ToInt32(sizeBytes, 0);
             if (size <= 0)
             {
-                return "";
+                return new byte[] {};
             }
             var bytes = new byte[size];
             var bytesRemaining = size;
@@ -42,20 +47,24 @@ namespace AudiosAmigo
                 offset += readCount;
                 bytesRemaining -= readCount;
             }
-            return Translate.ByteArrayToString(bytes);
+            return bytes;
+        } 
+
+        public void Send(string text)
+        {
+            SendBytes(Translate.StringToByteArray(text));
+        }
+
+        public void SendBytes(byte[] buffer)
+        {
+            var sizeBytes = BitConverter.GetBytes(buffer.Length);
+            _stream.Write(sizeBytes, 0, sizeBytes.Length);
+            _stream.Write(buffer, 0, buffer.Length);
         }
 
         public void Close()
         {
             _stream.Close();
-        }
-
-        public void Send(string buffer)
-        {
-            var sizeBytes = BitConverter.GetBytes(buffer.Length);
-            _stream.Write(sizeBytes, 0, sizeBytes.Length);
-            var bytes = Translate.StringToByteArray(buffer);
-            _stream.Write(bytes, 0, bytes.Length);
         }
     }
 }
