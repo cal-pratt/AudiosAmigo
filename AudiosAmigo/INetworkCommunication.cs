@@ -2,9 +2,13 @@ namespace AudiosAmigo
 {
     public interface INetworkCommunication
     {
-        void Send(string buffer);
-
         string Receive();
+
+        byte[] ReceiveBytes();
+
+        void Send(string text);
+
+        void SendBytes(byte[] buffer);
 
         void Close();
     }
