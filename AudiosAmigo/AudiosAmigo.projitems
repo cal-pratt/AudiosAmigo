@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AudioProcessState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Encrpytion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PasswordUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SecureTcpClientCommunication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UdpUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Command.cs" />
