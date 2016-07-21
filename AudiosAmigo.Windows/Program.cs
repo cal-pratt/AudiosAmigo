@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Forms;
 
 namespace AudiosAmigo.Windows
 {
@@ -12,19 +13,29 @@ namespace AudiosAmigo.Windows
         [STAThread]
         public static void Main()
         {
-            try
+            var passHash = Translate.ByteArrayToBase64String(PasswordUtil.PbkdfHash(
+                Translate.StringToByteArray(Constants.DefaultSessionPassword),
+                Constants.PasswordSalt,
+                Constants.PasswordIterations,
+                Constants.PasswordLength));
+            var subscriptions = Begin(Constants.DefaultServerTcpListenerPort, passHash);
+            Application.Run();
+        }
+
+        public static IDisposable Begin(int serverTcpListenerPort, string password)
+        {
+            var counter = 0;
+            return new CompositeDisposable
             {
                 UdpUtil.ReceivePortInfo(Constants.ServerBroadcastListenerPort)
                     .ObserveOn(NewThreadScheduler.Default)
                     .SubscribeOn(NewThreadScheduler.Default)
-                    .Subscribe(UdpUtil.IntWriter(Constants.DefaultServerTcpListenerPort));
+                    .Subscribe(UdpUtil.IntWriter(serverTcpListenerPort)),
 
-                var counter = 0;
-                ClientAcceptor.From(Constants.DefaultServerTcpListenerPort)
+                ClientAcceptor.From(serverTcpListenerPort)
                     .ObserveOn(NewThreadScheduler.Default).SubscribeOn(NewThreadScheduler.Default)
                     .Select(client => new SecureTcpClientCommunication(
-                        new TcpClientCommunication(client),
-                        new Encrpytion(Constants.DefaultSessionPassword, Constants.EncrpytionInitVector)))
+                        new TcpClientCommunication(client), new Encrpytion(password, Constants.EncrpytionInitVector)))
                     .Scan((INetworkCommunication) null, (last, next) =>
                     {
                         last?.Close();
@@ -45,13 +56,8 @@ namespace AudiosAmigo.Windows
                         last?.Dispose();
                         return next;
                     })
-                    .Subscribe(_ => Console.WriteLine($"Client No {counter++}, Created."));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"{e}: {e.Message}\n{e.StackTrace}");
-            }
-            Console.WriteLine("Started");
+                    .Subscribe(_ => Console.WriteLine($"Client No {counter++}, Created."))
+            };
         }
     }
 }

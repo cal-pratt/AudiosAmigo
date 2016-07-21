@@ -11,5 +11,11 @@
         public static string EncrpytionInitVector => "AudiosAmigoIVStr";
 
         public static string DefaultSessionPassword => "AudiosAmigoDefault";
+
+        public static byte[] PasswordSalt => Translate.StringToByteArray("AudiosAmigoSalt");
+
+        public static int PasswordIterations => 100;
+
+        public static int PasswordLength => 50;
     }
 }
