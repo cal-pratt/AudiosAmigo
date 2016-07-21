@@ -3,14 +3,14 @@ using System.Drawing;
 
 namespace AudiosAmigo.Windows
 {
-    public class AudioServer : CommandHandler
+    public class AudioServer : Server
     {
         private readonly AudioController _controller = new AudioController();
 
         public AudioServer()
         {
-            _controller.Subscribe<AudioProcessState>(SendUpdateProcessCommand);
-            _controller.Subscribe<AudioDeviceState>(SendUpdateDeviceCommand);
+            _controller.Subscribe<AudioProcessState>(SendUpdateProcess);
+            _controller.Subscribe<AudioDeviceState>(SendUpdateDevice);
         }
 
         public void Close()
@@ -46,7 +46,7 @@ namespace AudiosAmigo.Windows
             if (imageBytes != null)
             {
                 var base64String = Convert.ToBase64String(imageBytes);
-                SendUpdateProcessImageCommand(state, base64String);
+                SendUpdateProcessImage(state, base64String);
             }
         }
 
@@ -59,18 +59,8 @@ namespace AudiosAmigo.Windows
             if (imageBytes != null)
             {
                 var base64String = Convert.ToBase64String(imageBytes);
-                SendUpdateDeviceImageCommand(device, base64String);
+                SendUpdateDeviceImage(device, base64String);
             }
-        }
-
-        public override void UpdateProcessImage(AudioProcessState state, string image)
-        {
-            throw new ApplicationException("Server images cannot be updated");
-        }
-
-        public override void UpdateDeviceImage(AudioDeviceState state, string image)
-        {
-            throw new ApplicationException("Server images cannot be updated");
         }
     }
 }

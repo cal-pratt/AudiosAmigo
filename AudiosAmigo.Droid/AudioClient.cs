@@ -10,7 +10,7 @@ using Android.Widget;
 
 namespace AudiosAmigo.Droid
 {
-    public class AudioClient : CommandHandler
+    public class AudioClient : Client
     {
         private readonly Activity _activity;
 
@@ -52,7 +52,7 @@ namespace AudiosAmigo.Droid
                 var key = Tuple.Create(state.Device, state.Pid);
                 if (!_processControllers.ContainsKey(key))
                 {
-                    SendGetProcessImageCommand(state);
+                    SendGetProcessImage(state);
                     _processControllers.Add(key, null);
                 }
                 else if (state.IsAlive == false)
@@ -78,7 +78,7 @@ namespace AudiosAmigo.Droid
             {
                 if (!_deviceButtons.ContainsKey(state.Name))
                 {
-                    SendGetDeviceImageCommand(state);
+                    SendGetDeviceImage(state);
                     _deviceButtons.Add(state.Name, null);
                     _deviceControllers.Add(state.Name, null);
                 }
@@ -88,16 +88,6 @@ namespace AudiosAmigo.Droid
                     UpdateStatus(state.Name, state.Volume, state.Mute);
                 }
             });
-        }
-
-        public override void GetProcessImage(AudioProcessState state)
-        {
-            throw new ApplicationException("Process images cannot be requested from a client");
-        }
-
-        public override void GetDeviceImage(AudioDeviceState device)
-        {
-            throw new ApplicationException("Device images cannot be requested from a client");
         }
 
         public override void UpdateProcessImage(AudioProcessState state, string image)
@@ -122,7 +112,7 @@ namespace AudiosAmigo.Droid
                         _activity, state, sliderWidth, sliderHeight, bitmap);
                     _normalSliders.AddView(_processControllers[key].Parent);
                 }
-                _processControllers[key].Subscribe(SendUpdateProcessCommand);
+                _processControllers[key].Subscribe(SendUpdateProcess);
                 _processControllers[key].Subscribe(s => UpdateStatus(s.Name, s.Volume, s.Mute));
                 if (_activeDevice != state.Device)
                 {
@@ -144,7 +134,7 @@ namespace AudiosAmigo.Droid
                 _deviceControllers[state.Name] = new AudioDeviceController(
                     _activity, state, sliderWidth, sliderHeight, bitmap);
 
-                _deviceControllers[state.Name].Subscribe(SendUpdateDeviceCommand);
+                _deviceControllers[state.Name].Subscribe(SendUpdateDevice);
                 _deviceControllers[state.Name].Subscribe(s => UpdateStatus(s.Name, s.Volume, s.Mute));
                 _masterSliders.AddView(_deviceControllers[state.Name].Parent);
                 _deviceControllers[state.Name].Parent.Visibility = ViewStates.Gone;

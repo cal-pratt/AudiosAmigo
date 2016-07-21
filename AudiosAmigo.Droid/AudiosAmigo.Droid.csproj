@@ -86,14 +86,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AudiosAmigo.Generate\CommandHandler.cs">
-      <Link>Links\CommandHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\AudiosAmigo.Generate\CommandReader.cs">
-      <Link>Links\CommandReader.cs</Link>
-    </Compile>
-    <Compile Include="..\AudiosAmigo.Generate\CommandWriter.cs">
-      <Link>Links\CommandWriter.cs</Link>
+    <Compile Include="..\AudiosAmigo.Generate\Client.generated.cs">
+      <Link>Links\Client.generated.cs</Link>
     </Compile>
     <Compile Include="AudioClient.cs" />
     <Compile Include="AudioDeviceController.cs" />

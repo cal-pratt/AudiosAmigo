@@ -95,14 +95,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AudiosAmigo.Generate\CommandHandler.cs">
-      <Link>Links\CommandHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\AudiosAmigo.Generate\CommandReader.cs">
-      <Link>Links\CommandReader.cs</Link>
-    </Compile>
-    <Compile Include="..\AudiosAmigo.Generate\CommandWriter.cs">
-      <Link>Links\CommandWriter.cs</Link>
+    <Compile Include="..\AudiosAmigo.Generate\Server.generated.cs">
+      <Link>Links\Server.generated.cs</Link>
     </Compile>
     <Compile Include="AudioController.cs" />
     <Compile Include="AudioDeviceController.cs" />
