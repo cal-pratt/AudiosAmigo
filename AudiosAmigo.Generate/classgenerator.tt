@@ -1,0 +1,149 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#"
+#><#@ output extension=".out"
+#><#@ assembly name="System.Core"
+#><#@ assembly name="EnvDTE"
+#><#@ import namespace="System.Linq"
+#><#@ import namespace="System.IO"
+#><#@ import namespace="System.Collections.Generic"
+#><#@ import namespace="System.Text.RegularExpressions"
+#><# 
+var fileName = this.Host.ResolvePath("classdefs");
+var fileString = File.ReadAllText(fileName).Replace("\n", " ");
+var classmatch = @"class\s+([^ ]*)\s*{([^}]*)}";
+var methodPattern = @"(r|rw|w)\s+([^ ]*)\s*\(([^)]*)\)";
+var parameterPattern = @"\s*([^ ,]*)\s+([^ ,]*\s*)";
+    
+var rmethods = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+var wmethods = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+var classMatches = Regex.Matches(fileString, classmatch);
+foreach (Match classMatch in classMatches)
+{
+    var className = classMatch.Groups[1].Value;
+    rmethods.Add(className, new Dictionary<string, Dictionary<string, string>>());
+    wmethods.Add(className, new Dictionary<string, Dictionary<string, string>>());
+    var methodMatches = Regex.Matches(classMatch.Groups[2].Value, methodPattern);
+    foreach (Match methodMatch in methodMatches)
+    {
+        var methodType = methodMatch.Groups[1].Value;
+        var methodName = methodMatch.Groups[2].Value;
+        var parameterMatches = Regex.Matches(methodMatch.Groups[3].Value, parameterPattern);
+        var parameters = new Dictionary<string, string>();
+        foreach (Match parameterMatch in parameterMatches)
+        {
+            var parameterClass = parameterMatch.Groups[1].Value;
+            var parameterName = parameterMatch.Groups[2].Value;
+            parameters.Add(parameterName, parameterClass);
+        }
+        if (methodType == "rw" || methodType == "r") 
+        {
+            rmethods[className].Add(methodName, parameters);
+        }
+        if (methodType == "rw" || methodType == "w") 
+        {
+            wmethods[className].Add(methodName, parameters);
+        }
+    }
+}
+
+foreach (string className in rmethods.Keys)
+{
+#>/*************************************************************************************************
+*************          THIS IS A GENERATED CLASS! DO NOT EDIT DIRECTLY !!!           *************
+*************************************************************************************************/
+
+using System;
+using System.Reactive.Subjects;
+
+namespace AudiosAmigo
+{<#
+    #>
+    public abstract partial class <#=className#> : IObserver<Command>, IObservable<Command>
+    {
+<#
+    foreach (string methodName in rmethods[className].Keys)
+    {
+        var arguments = string.Join(", ", rmethods[className][methodName]
+            .Select(arg => $"{arg.Value} {arg.Key}").ToArray());
+#>        public abstract void <#=methodName#>(<#=arguments#>);
+
+<#
+    }
+
+    foreach (string methodName in wmethods[className].Keys)
+    {
+        var arguments = string.Join(", ", wmethods[className][methodName]
+            .Select(arg => $"{arg.Value} {arg.Key}").ToArray());
+        var parameters = string.Join(", ", wmethods[className][methodName].Select(arg => arg.Key).ToArray());
+#>        public void Send<#=methodName#>(<#=arguments#>) => _Send<#=methodName#>(<#=parameters#>);
+
+<#
+    }
+#>        public abstract void OnError(Exception error);
+
+        public abstract void OnCompleted();
+
+        #region internal
+        public void OnNext(Command command)
+        {
+            switch (command?.Action)
+            {
+<#
+    foreach (string methodName in rmethods[className].Keys)
+    {
+        int count = 0;
+        var arguments = string.Join(", ", rmethods[className][methodName].Select(arg => 
+        {
+            var index = count++;
+            return arg.Value.ToLower() == "string" ? 
+                $"command.Parameters[{index}]" : 
+                $"Translate.StringToObject<{arg.Value}>(command.Parameters[{index}])";
+        }).ToArray());
+#>                case "<#=methodName#>":
+                    <#=methodName#>(<#=arguments#>);
+                    break;
+<#
+    }
+#>            }
+        }
+
+        private readonly Subject<Command> _subject = new Subject<Command>();
+
+        public IDisposable Subscribe(IObserver<Command> observer)
+        {
+            return _subject.Subscribe(observer);
+        } 
+<#
+    foreach (string methodName in wmethods[className].Keys)
+    {
+        var arguments = string.Join(", ", wmethods[className][methodName].Select(arg => $"{arg.Value} {arg.Key}").ToArray());
+        var parameters = string.Join(", ", wmethods[className][methodName].Select(arg => 
+            arg.Value.ToLower() == "string" ? arg.Key : $"Translate.ObjectToString({arg.Key})").ToArray());
+#>
+        private void _Send<#=methodName#>(<#=arguments#>) 
+        {
+            _subject.OnNext(new Command
+            {
+                Action = "<#=methodName#>",
+                Parameters = new string[] { <#=parameters#> }
+            });
+        }
+<#
+    }
+#>        #endregion 
+    }
+}
+
+<#
+    var classFileName = Path.Combine(Path.GetDirectoryName(Host.TemplateFile), className + ".generated.cs");
+    var content = GenerationEnvironment.ToString(0, GenerationEnvironment.Length);
+    File.WriteAllText(classFileName, content);
+    GenerationEnvironment.Remove(0, GenerationEnvironment.Length);
+    try 
+    {
+        ((EnvDTE.DTE)(((IServiceProvider)Host).GetService(typeof(EnvDTE.DTE))))
+            .Solution.FindProjectItem(Host.TemplateFile)
+            .ProjectItems.AddFromFile(classFileName);
+    }
+    catch(Exception){ }
+}
+#>

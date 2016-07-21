@@ -1,0 +1,28 @@
+﻿/**
+ *  This file is used to autogenerate a command interface.
+ *  CommandHandler both obsersves and emits Command objects which 
+ *  can then be serialized and streamed over the network.
+ *  
+ *  For simplicity, link this build with classgenerator.tt using this tool:
+ *  https://visualstudiogallery.msdn.microsoft.com/ecb123bf-44bb-4ae3-91ee-a08fc1b9770e
+ *  tt files with can be read easier with this tool:
+ *  https://www.devart.com/t4-editor/download.html
+ **/
+
+class Server {
+    rw UpdateProcess(AudioProcessState state)
+    rw UpdateDevice(AudioDeviceState state)
+    r GetProcessImage(AudioProcessState state)
+    r GetDeviceImage(AudioDeviceState device)
+    w UpdateProcessImage(AudioProcessState state, string image)
+    w UpdateDeviceImage(AudioDeviceState state, string image)
+}
+
+class Client {
+    rw UpdateProcess(AudioProcessState state)
+    rw UpdateDevice(AudioDeviceState state)
+    w GetProcessImage(AudioProcessState state)
+    w GetDeviceImage(AudioDeviceState device)
+    r UpdateProcessImage(AudioProcessState state, string image)
+    r UpdateDeviceImage(AudioDeviceState state, string image)
+}
