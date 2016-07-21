@@ -89,7 +89,7 @@ namespace AudiosAmigo.Droid
             var passEncrpytion = new Encrpytion(id, Constants.EncrpytionInitVector);
             var sharedPref = activity.GetSharedPreferences(
                 activity.GetString(Resource.String.preference_save_file_key), FileCreationMode.Private);
-
+            
             var saveList = new List<Java.Lang.String>();
             foreach (var session in sharedPref.All.Keys)
             {
@@ -113,15 +113,19 @@ namespace AudiosAmigo.Droid
                         saveAdapter.Add(new Java.Lang.String(session));
                         saveAdapter.NotifyDataSetChanged();
                     }
+                    var passText = password.Text == "" ? Constants.DefaultSessionPassword : password.Text;
                     var pass = Translate.ByteArrayToBase64String(
                         passEncrpytion.Encrypt(
-                            Translate.StringToByteArray(
-                                password.Text)));
+                            PasswordUtil.PbkdfHash(
+                                Translate.StringToByteArray(passText),
+                                Constants.PasswordSalt,
+                                Constants.PasswordIterations,
+                                Constants.PasswordLength)));
                     sharedPref.Edit().PutString(session, pass).Commit();
                 });
 
             new ObservableOnItemLongClickListener<Java.Lang.String>(saveListView)
-                .Subscribe(item => 
+                .Subscribe(item =>
                 {
                     var deleteBuilder = new AlertDialog.Builder(activity);
                     var title = activity.GetString(Resource.String.connect_menu_confirm_delete_title);
@@ -142,17 +146,30 @@ namespace AudiosAmigo.Droid
                     deleteDialog.Show();
                 });
 
+            var passwordLoaded = false;
+            var loadedHash = "";
+            password.BeforeTextChanged += (sender, args) =>
+            {
+                if (passwordLoaded)
+                {
+                    passwordLoaded = false;
+                    password.Text = "";
+                }
+            };
+
             new ObservableOnItemClickListener<Java.Lang.String>(saveListView)
                 .Subscribe(item =>
                 {
-                    var pass = Translate.ByteArrayToString(
+                    var passHash = Translate.ByteArrayToBase64String(
                         passEncrpytion.Decrypt(
                             Translate.Base64StringToByteArray(
                                 sharedPref.GetString((string) item, ""))));
                     var split = item.Split(":");
                     ip.Text = split[0];
                     port.Text = split[1];
-                    password.Text = pass;
+                    password.Text = "******";
+                    passwordLoaded = true;
+                    loadedHash = passHash;
                 });
 
             #endregion
@@ -167,8 +184,21 @@ namespace AudiosAmigo.Droid
                 dialog.Hide();
             });
 
-            return observableConnect.Select(pressed => Tuple.Create(ip.Text, int.Parse(port.Text), 
-                password.Text == "" ? Constants.DefaultSessionPassword : password.Text));
+            return observableConnect.Select(pressed =>
+            {
+                if (passwordLoaded)
+                {
+                    return Tuple.Create(ip.Text, int.Parse(port.Text), loadedHash);
+                }
+                var passBytes = Translate.StringToByteArray(
+                    password.Text == "" ? Constants.DefaultSessionPassword : password.Text);
+                return Tuple.Create(ip.Text, int.Parse(port.Text),
+                    Translate.ByteArrayToBase64String(
+                        PasswordUtil.PbkdfHash(passBytes,
+                            Constants.PasswordSalt,
+                            Constants.PasswordIterations,
+                            Constants.PasswordLength)));
+            });
         }
     }
 }
