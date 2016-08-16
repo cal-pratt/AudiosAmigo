@@ -51,9 +51,7 @@ namespace AudiosAmigo.Droid
             searchListView.Adapter = searchAdapter;
 
             var searchSet = new HashSet<Java.Lang.String>();
-            UdpUtil.ReceivePortInfo(Constants.ClientBroadcastListenerPort)
-                .ObserveOn(NewThreadScheduler.Default)
-                .SubscribeOn(NewThreadScheduler.Default)
+            var udpSubscription = UdpUtil.ReceivePortInfo(Constants.ClientBroadcastListenerPort)
                 .Select(endpoint => new Java.Lang.String($"{endpoint.Address}:{endpoint.Port}"))
                 .Subscribe(session => activity.RunOnUiThread(() =>
                 {
@@ -186,6 +184,7 @@ namespace AudiosAmigo.Droid
 
             return observableConnect.Select(pressed =>
             {
+                udpSubscription.Dispose();
                 if (passwordLoaded)
                 {
                     return Tuple.Create(ip.Text, int.Parse(port.Text), loadedHash);
