@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace AudiosAmigo
 {
@@ -10,32 +11,29 @@ namespace AudiosAmigo
     {
         public static IObservable<IPEndPoint> ReceivePortInfo(int port)
         {
+            var running = true;
+            var listener = new UdpClient(port);
             return Observable.Create<IPEndPoint>(
                 subscriber =>
                 {
-                    UdpClient listener = null;
-                    try
+                    Task.Run(async () =>
                     {
-                        listener = new UdpClient(port);
-                        for (;;)
+                        await Task.Yield();
+                        while (running)
                         {
                             var endpoint = new IPEndPoint(IPAddress.Any, port);
                             var bytes = listener.Receive(ref endpoint);
-                            var i = BitConverter.ToInt32(bytes, 0);
-                            Console.WriteLine("Received broadcast from {0}", endpoint.ToString());
-                            subscriber.OnNext(new IPEndPoint(endpoint.Address, i));
+                            Console.WriteLine($"Received broadcast from {endpoint}");
+                            subscriber.OnNext(new IPEndPoint(endpoint.Address, BitConverter.ToInt32(bytes, 0)));
                         }
-                    }
-                    catch (SocketException e)
+                        subscriber.OnCompleted();
+                    });
+                    return Disposable.Create(() =>
                     {
-                        Console.WriteLine(e.Message);
-                    }
-                    finally
-                    {
-                        listener?.Close();
-                    }
-                    return Disposable.Empty;
-                }).Repeat();
+                        running = false;
+                        listener.Close();
+                    });
+                });
         }
 
         public static Action<IPEndPoint> IntWriter(int i)

@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace AudiosAmigo.Windows
 {
@@ -11,18 +12,29 @@ namespace AudiosAmigo.Windows
         public static IObservable<TcpClient> From(int tcpPort)
         {
             var serverSocket = new TcpListener(IPAddress.Any, tcpPort);
-            var counter = 0;
             serverSocket.Start();
 
-            return Observable.Create<TcpClient>(
-                observer =>
+            var counter = 0;
+            var running = true;
+            return Observable.Create<TcpClient>(observer =>
+            {
+                Task.Run(async () =>
                 {
-                    var client = serverSocket.AcceptTcpClient();
-                    Console.WriteLine($"!! Client {client} No: {counter++} started !!");
-                    observer.OnNext(client);
+                    await Task.Yield();
+                    while (running)
+                    {
+                        var client = serverSocket.AcceptTcpClient();
+                        Console.WriteLine($"!! Client {client} No: {counter++} started !!");
+                        observer.OnNext(client);
+                    }
                     observer.OnCompleted();
-                    return Disposable.Empty;
-                }).Repeat();
+                });
+                return Disposable.Create(() =>
+                {
+                    running = false;
+                    serverSocket.Stop();
+                });
+            });
         }
     }
 }
