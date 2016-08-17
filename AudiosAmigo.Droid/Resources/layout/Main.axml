@@ -15,7 +15,8 @@
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight=".20"
-            android:background="@drawable/bgmain">
+            android:background="@drawable/bgmain"
+            android:fadeScrollbars="false">
             <LinearLayout
                 android:id="@+id/device_container"
                 android:layout_width="match_parent"
@@ -29,7 +30,8 @@
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight=".80"
-            android:background="@drawable/bgmain">
+            android:background="@drawable/bgmain"
+            android:fadeScrollbars="false">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
