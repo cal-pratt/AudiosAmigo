@@ -2,6 +2,10 @@ namespace AudiosAmigo
 {
     public class AudioProcessState
     {
+        public const string SystemSoundsName = "System Sounds";
+
+        public const int SystemSoundsPid = -1;
+
         public string Name { get; set; }
 
         public string Device { get; set; }
@@ -13,6 +17,38 @@ namespace AudiosAmigo
         public bool Mute { get; set; }
 
         public bool IsAlive { get; set; }
+
+        public AudioProcessState() { }
+
+        public AudioProcessState(string name, string device, int pid)
+        {
+            Name = name;
+            Device = device;
+            Pid = pid;
+            Volume = 0;
+            Mute = true;
+            IsAlive = true;
+        }
+
+        public AudioProcessState SetAlive(bool isAlive) => new AudioProcessState
+        {
+            Name = Name,
+            Device = Device,
+            Pid = Pid,
+            Volume = Volume,
+            Mute = Mute,
+            IsAlive = isAlive
+        };
+
+        public AudioProcessState SetAudio(float volume, bool mute) => new AudioProcessState
+        {
+            Name = Name,
+            Device = Device,
+            Pid = Pid,
+            Volume = volume,
+            Mute = mute,
+            IsAlive = IsAlive
+        };
 
         protected bool Equals(AudioProcessState other)
         {
