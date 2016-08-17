@@ -4,6 +4,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Android.App;
 using Android.Content.PM;
+using Android.Graphics;
 using Android.Widget;
 using Android.OS;
 using Android.Views;
@@ -14,11 +15,7 @@ namespace AudiosAmigo.Droid
     [Activity(Label = "AudiosAmigo.Droid", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        private const float WidthPercent = 0.18f;
-        
-        private int SliderHeight => FindViewById(Resource.Id.slider_scroll).Height;
-        
-        private int SliderWidth => (int)(SliderHeight * WidthPercent);
+        private const float SliderWidthRatio = 0.18f;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -39,12 +36,35 @@ namespace AudiosAmigo.Droid
 
         public void Connect(string ip, int port, string password)
         {
-            var controller = new AudioController(this, SliderWidth, SliderHeight,
-                 FindViewById<ViewGroup>(Resource.Id.normal_sliders),
-                 FindViewById<ViewGroup>(Resource.Id.master_sliders),
-                 FindViewById<ViewGroup>(Resource.Id.system_sliders),
-                 FindViewById<ViewGroup>(Resource.Id.device_container),
-                 FindViewById<TextView>(Resource.Id.status));
+            var height = FindViewById(Resource.Id.slider_scroll).Height;
+            var width = (int) (height*SliderWidthRatio);
+
+            var systemBitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.audiosrv);
+            var muteBitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.muteblue);
+
+            var inflater = (LayoutInflater) GetSystemService(LayoutInflaterService);
+            var vibrator = (Vibrator) GetSystemService(VibratorService);
+
+            var volumeSliderBuilder = new VolumeSlider.Builder(
+                inflater, vibrator, width, height, muteBitmap);
+
+            var deviceSelectorBuilder = new DeviceSelector.Builder(
+                inflater, width, width);
+
+            var audioDeviceControllerBuilder = new AudioDeviceController.Builder(
+                volumeSliderBuilder,
+                FindViewById<ViewGroup>(Resource.Id.normal_sliders),
+                FindViewById<ViewGroup>(Resource.Id.master_sliders),
+                FindViewById<ViewGroup>(Resource.Id.system_sliders),
+                FindViewById<TextView>(Resource.Id.status),
+                systemBitmap);
+            
+            var controller = new AudioController(
+                audioDeviceControllerBuilder,
+                deviceSelectorBuilder,
+                FindViewById<ViewGroup>(Resource.Id.device_container));
+
+            var handler = new AudioClient(controller);
 
             var client = new TcpClient(ip, port);
             var communication = new SecureTcpClientCommunication(
@@ -52,7 +72,7 @@ namespace AudiosAmigo.Droid
                 new Encrpytion(password, Constants.EncrpytionInitVector));
             var communicator = new Communicator<Command>(
                 communication, NewThreadScheduler.Default);
-            var handler = new AudioClient(controller);
+
             communicator.SubscribeOn(NewThreadScheduler.Default).Subscribe(handler);
             handler.SubscribeOn(NewThreadScheduler.Default).Subscribe(communicator);
         }
