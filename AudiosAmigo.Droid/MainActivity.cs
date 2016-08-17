@@ -6,12 +6,20 @@ using Android.App;
 using Android.Content.PM;
 using Android.Widget;
 using Android.OS;
+using Android.Views;
+using AudiosAmigo.Droid.Observables;
 
 namespace AudiosAmigo.Droid
 {
     [Activity(Label = "AudiosAmigo.Droid", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
+        private const float WidthPercent = 0.18f;
+        
+        private int SliderHeight => FindViewById(Resource.Id.slider_scroll).Height;
+        
+        private int SliderWidth => (int)(SliderHeight * WidthPercent);
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -31,13 +39,20 @@ namespace AudiosAmigo.Droid
 
         public void Connect(string ip, int port, string password)
         {
+            var controller = new AudioController(this, SliderWidth, SliderHeight,
+                 FindViewById<ViewGroup>(Resource.Id.normal_sliders),
+                 FindViewById<ViewGroup>(Resource.Id.master_sliders),
+                 FindViewById<ViewGroup>(Resource.Id.system_sliders),
+                 FindViewById<ViewGroup>(Resource.Id.device_container),
+                 FindViewById<TextView>(Resource.Id.status));
+
             var client = new TcpClient(ip, port);
             var communication = new SecureTcpClientCommunication(
                 new TcpClientCommunication(client),
                 new Encrpytion(password, Constants.EncrpytionInitVector));
             var communicator = new Communicator<Command>(
                 communication, NewThreadScheduler.Default);
-            var handler = new AudioClient(this);
+            var handler = new AudioClient(controller);
             communicator.SubscribeOn(NewThreadScheduler.Default).Subscribe(handler);
             handler.SubscribeOn(NewThreadScheduler.Default).Subscribe(communicator);
         }
