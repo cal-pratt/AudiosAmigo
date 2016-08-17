@@ -95,6 +95,7 @@
     <Compile Include="AudioDeviceController.cs" />
     <Compile Include="AudioProcessVolumeSlider.cs" />
     <Compile Include="ConnectionInformation.cs" />
+    <Compile Include="DeviceSelector.cs" />
     <Compile Include="MainActivity.cs">
       <LastGenOutput>MainActivity1.cs</LastGenOutput>
     </Compile>

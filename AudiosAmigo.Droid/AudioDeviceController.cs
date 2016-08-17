@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Views;
@@ -12,7 +11,55 @@ namespace AudiosAmigo.Droid
 {
     public class AudioDeviceController : IObservable<AudioProcessState>, IObservable<AudioDeviceState>
     {
-        private readonly Context _context;
+        public class Builder
+        {
+            private readonly VolumeSlider.Builder _volumeSliderBuilder;
+
+            private readonly Bitmap _systemBitmap;
+
+            private readonly ViewGroup _processSliderContainer;
+
+            private readonly ViewGroup _deviceSliderContainer;
+
+            private readonly ViewGroup _systemSliderContainer;
+
+            private readonly TextView _status;
+
+            public Builder(
+                VolumeSlider.Builder volumeSliderBuilder,
+                ViewGroup processSliderContainer,
+                ViewGroup deviceSliderContainer,
+                ViewGroup systemSliderContainer,
+                TextView status,
+                Bitmap systemBitmap)
+            {
+                _volumeSliderBuilder = volumeSliderBuilder;
+                _systemBitmap = systemBitmap;
+                _processSliderContainer = processSliderContainer;
+                _deviceSliderContainer = deviceSliderContainer;
+                _systemSliderContainer = systemSliderContainer;
+                _status = status;
+            }
+
+            public AudioDeviceController Build(AudioDeviceState device, Bitmap image)
+            {
+                var systemState = new AudioProcessState(
+                    AudioProcessState.SystemSoundsName,
+                    device.Name,
+                    AudioProcessState.SystemSoundsPid);
+
+                return new AudioDeviceController(
+                    _volumeSliderBuilder,
+                    device, image,
+                    systemState, _systemBitmap,
+                    _processSliderContainer,
+                    _deviceSliderContainer,
+                    _systemSliderContainer,
+                    _status);
+            }
+        }
+
+        private readonly VolumeSlider.Builder _volumeSliderBuilder;
 
         private readonly ViewGroup _processSliderContainer;
 
@@ -22,17 +69,12 @@ namespace AudiosAmigo.Droid
 
         private readonly Dictionary<AudioProcessState, AudioProcessVolumeSlider> _processVolumeSliders = 
             new Dictionary<AudioProcessState, AudioProcessVolumeSlider>();
-
-        private readonly int _sliderHeight;
-
-        private readonly int _sliderWidth;
         
         private readonly Subject<IObservable<AudioProcessState>> _subject =
             new Subject<IObservable<AudioProcessState>>();
 
-        public AudioDeviceController(
-            Context context,
-            int sliderWidth, int sliderHeight,
+        private AudioDeviceController(
+            VolumeSlider.Builder volumeSliderBuilder,
             AudioDeviceState deviceState, Bitmap deviceBitmap,
             AudioProcessState systemState, Bitmap systemBitmap,
             ViewGroup processSliderContainer, 
@@ -40,20 +82,16 @@ namespace AudiosAmigo.Droid
             ViewGroup systemSliderContainer, 
             TextView status)
         {
-            _context = context;
-            _sliderHeight = sliderHeight;
-            _sliderWidth = sliderWidth;
+            _volumeSliderBuilder = volumeSliderBuilder;
             _processSliderContainer = processSliderContainer;
             _status = status;
 
-            _deviceVolumeSlider = new AudioDeviceVolumeSlider(
-                _context, deviceState, _sliderWidth, _sliderHeight, deviceBitmap);
+            _deviceVolumeSlider = new AudioDeviceVolumeSlider(deviceState, _volumeSliderBuilder.Build(deviceBitmap));
             _deviceVolumeSlider.Parent.Visibility = ViewState;
             deviceSliderContainer.AddView(_deviceVolumeSlider.Parent);
             _deviceVolumeSlider.Subscribe(state => UpdateStatus(state.Name, state.Volume, state.Mute));
 
-            var systemController = new AudioProcessVolumeSlider(
-                _context, systemState, _sliderWidth, _sliderHeight, systemBitmap);
+            var systemController = new AudioProcessVolumeSlider(systemState, _volumeSliderBuilder.Build(systemBitmap));
             systemController.Parent.Visibility = ViewState;
             systemSliderContainer.AddView(systemController.Parent);
             systemController.Subscribe(state => UpdateStatus(state.Name, state.Volume, state.Mute));
@@ -106,8 +144,7 @@ namespace AudiosAmigo.Droid
 
         public void CreateProcess(AudioProcessState process, Bitmap bitmap)
         {
-            var processController = new AudioProcessVolumeSlider(
-                _context, process, _sliderWidth, _sliderHeight, bitmap);
+            var processController = new AudioProcessVolumeSlider(process, _volumeSliderBuilder.Build(bitmap));
             processController.Parent.Visibility = ViewState;
             _processSliderContainer.AddView(processController.Parent);
             _subject.OnNext(processController);

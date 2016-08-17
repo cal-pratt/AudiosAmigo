@@ -1,7 +1,5 @@
 using System;
 using System.Reactive.Linq;
-using Android.Content;
-using Android.Graphics;
 using Android.Views;
 
 namespace AudiosAmigo.Droid
@@ -12,26 +10,24 @@ namespace AudiosAmigo.Droid
 
         private readonly VolumeSlider _slider;
 
-        private AudioProcessState _state;
-        
-        public AudioProcessVolumeSlider(
-            Context context,
-            AudioProcessState process,
-            int width, int height, Bitmap image)
+        public AudioProcessState State { get; private set; }
+
+        public AudioProcessVolumeSlider(AudioProcessState process, VolumeSlider slider)
         {
-            _state = process;
-            _slider = new VolumeSlider(context, process.Volume, process.Mute, width, height, image);
+            State = process;
+            _slider = slider;
+            Update(State);
         }
 
         public void Update(AudioProcessState process)
         {
-            _slider.SetVolume(process.Volume);
-            _slider.SetMute(process.Mute);
+            _slider.Volume = process.Volume;
+            _slider.Mute = process.Mute;
         }
 
         public IDisposable Subscribe(IObserver<AudioProcessState> observer)
         {
-            return _slider.Select(tuple => _state = _state.SetAudio(tuple.Item1, tuple.Item2))
+            return _slider.Select(tuple => State = State.SetAudio(tuple.Item1, tuple.Item2))
                 .Subscribe(observer);
         }
     }

@@ -2,31 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Android.Content;
 using Android.Graphics;
 using Android.Views;
-using Android.Widget;
-using AudiosAmigo.Droid.Observables;
 
 namespace AudiosAmigo.Droid
 {
     public class AudioController : IObservable<AudioProcessState>, IObservable<AudioDeviceState>
     {
-        private readonly Context _context;
+        private readonly AudioDeviceController.Builder _audioDeviceControllerBuilder;
 
-        private readonly int _sliderWidth;
-
-        private readonly int _sliderHeight;
-
-        private readonly ViewGroup _processSliderContainer;
-
-        private readonly ViewGroup _deviceSliderContainer;
-
-        private readonly ViewGroup _systemSliderContainer;
+        private readonly DeviceSelector.Builder _deviceSelectorBuilder;
 
         private readonly ViewGroup _deviceContainer;
-
-        private readonly TextView _status;
 
         private readonly Dictionary<string, AudioDeviceController> _controllers =
             new Dictionary<string, AudioDeviceController>();
@@ -35,23 +22,13 @@ namespace AudiosAmigo.Droid
             new Subject<AudioDeviceController>();
 
         public AudioController(
-            Context context,
-            int sliderWidth,
-            int sliderHeight,
-            ViewGroup processSliderContainer,
-            ViewGroup deviceSliderContainer,
-            ViewGroup systemSliderContainer,
-            ViewGroup deviceContainer,
-            TextView status)
+            AudioDeviceController.Builder audioDeviceControllerBuilder,
+            DeviceSelector.Builder deviceSelectorBuilder,
+            ViewGroup deviceContainer)
         {
-            _context = context;
-            _sliderWidth = sliderWidth;
-            _sliderHeight = sliderHeight;
-            _processSliderContainer = processSliderContainer;
-            _deviceSliderContainer = deviceSliderContainer;
-            _systemSliderContainer = systemSliderContainer;
+            _audioDeviceControllerBuilder = audioDeviceControllerBuilder;
+            _deviceSelectorBuilder = deviceSelectorBuilder;
             _deviceContainer = deviceContainer;
-            _status = status;
         }
 
         public bool UpdateProcess(AudioProcessState process)
@@ -92,22 +69,7 @@ namespace AudiosAmigo.Droid
         {
             if (!_controllers.ContainsKey(device.Name))
             {
-                var systemBitmap = BitmapFactory.DecodeResource(_context.Resources, Resource.Drawable.audiosrv);
-                var systemState = new AudioProcessState
-                {
-                    Name = AudioProcessState.SystemSoundsName,
-                    Pid = AudioProcessState.SystemSoundsPid,
-                    Device = device.Name
-                };
-                _controllers[device.Name] = new AudioDeviceController(_context, _sliderWidth, _sliderHeight,
-                    device, image, systemState, systemBitmap,
-                    _processSliderContainer, _deviceSliderContainer, _systemSliderContainer, _status);
-
-                var inflater = (LayoutInflater)_context.GetSystemService(Context.LayoutInflaterService);
-                var imageButton = (ImageButton)inflater.Inflate(Resource.Layout.device_selector, null);
-                imageButton.SetImageBitmap(Bitmap.CreateScaledBitmap(image, _sliderWidth, _sliderWidth, true));
-
-                _deviceContainer.AddView(imageButton);
+                _controllers[device.Name] = _audioDeviceControllerBuilder.Build(device, image);
 
                 var setDeviceSliders = new Action(() =>
                 {
@@ -123,7 +85,10 @@ namespace AudiosAmigo.Droid
                     setDeviceSliders();
                 }
 
-                new ObservableClickListener(imageButton).Subscribe(pressed => setDeviceSliders());
+                var deviceSelector = _deviceSelectorBuilder.Build(image);
+                _deviceContainer.AddView(deviceSelector.Parent);
+                deviceSelector.Subscribe(pressed => setDeviceSliders());
+
                 _subject.OnNext(_controllers[device.Name]);
             }
         }
