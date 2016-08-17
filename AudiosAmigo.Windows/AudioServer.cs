@@ -1,14 +1,16 @@
 using System;
 using System.Drawing;
+using System.Reactive.Linq;
 
 namespace AudiosAmigo.Windows
 {
     public class AudioServer : Server
     {
-        private readonly AudioController _controller = new AudioController();
+        private readonly AudioController _controller;
 
-        public AudioServer()
+        public AudioServer(AudioController controller)
         {
+            _controller = controller;
             _controller.Subscribe<AudioProcessState>(SendUpdateProcess);
             _controller.Subscribe<AudioDeviceState>(SendUpdateDevice);
         }
@@ -28,31 +30,41 @@ namespace AudiosAmigo.Windows
 
         }
 
-        public override void UpdateProcess(AudioProcessState state)
+        public override void GetAllDevices()
         {
-            _controller.UpdateProcess(state);
+            _controller.DeviceStates.Subscribe(SendUpdateDevice);
         }
 
-        public override void UpdateDevice(AudioDeviceState state)
+        public override void GetAllProcesses(AudioDeviceState device)
         {
-            _controller.UpdateDevice(state);
+            _controller.ProcessStates.Where(state => state.Device == device.Name)
+                .Subscribe(SendUpdateProcess);
         }
 
-        public override void GetProcessImage(AudioProcessState state)
+        public override void UpdateProcess(AudioProcessState process)
         {
-            var image = _controller.GetProcessImage(state);
+            _controller.UpdateProcess(process);
+        }
+
+        public override void UpdateDevice(AudioDeviceState device)
+        {
+            _controller.UpdateDevice(device);
+        }
+
+        public override void GetProcessImage(AudioProcessState process)
+        {
+            var image = _controller.GetProcessImage(process);
             var converter = new ImageConverter();
             var imageBytes = (byte[]) converter.ConvertTo(image, typeof(byte[]));
             if (imageBytes != null)
             {
                 var base64String = Convert.ToBase64String(imageBytes);
-                SendUpdateProcessImage(state, base64String);
+                SendUpdateProcessImage(process, base64String);
             }
         }
 
         public override void GetDeviceImage(AudioDeviceState device)
         {
-
             var converter = new ImageConverter();
             var image = _controller.GetDeviceImage(device);
             var imageBytes = (byte[])converter.ConvertTo(image, typeof(byte[]));
