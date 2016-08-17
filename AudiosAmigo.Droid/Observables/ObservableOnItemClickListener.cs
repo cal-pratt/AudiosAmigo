@@ -3,7 +3,7 @@ using System.Reactive.Subjects;
 using Android.Views;
 using Android.Widget;
 
-namespace AudiosAmigo.Droid
+namespace AudiosAmigo.Droid.Observables
 {
     public class ObservableOnItemClickListener<T> : 
         Java.Lang.Object, AdapterView.IOnItemClickListener, IObservable<T>
