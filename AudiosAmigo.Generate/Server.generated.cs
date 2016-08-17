@@ -6,24 +6,27 @@ using System;
 using System.Reactive.Subjects;
 
 namespace AudiosAmigo
-{
-    public abstract partial class Server : IObserver<Command>, IObservable<Command>
+{    public abstract class Server : IObserver<Command>, IObservable<Command>
     {
-        public abstract void UpdateProcess(AudioProcessState state);
+        public abstract void GetAllDevices();
 
-        public abstract void UpdateDevice(AudioDeviceState state);
+        public abstract void GetAllProcesses(AudioDeviceState device);
 
-        public abstract void GetProcessImage(AudioProcessState state);
+        public abstract void UpdateProcess(AudioProcessState process);
+
+        public abstract void UpdateDevice(AudioDeviceState device);
+
+        public abstract void GetProcessImage(AudioProcessState process);
 
         public abstract void GetDeviceImage(AudioDeviceState device);
 
-        public void SendUpdateProcess(AudioProcessState state) => _SendUpdateProcess(state);
+        public void SendUpdateProcess(AudioProcessState process) => _SendUpdateProcess(process);
 
-        public void SendUpdateDevice(AudioDeviceState state) => _SendUpdateDevice(state);
+        public void SendUpdateDevice(AudioDeviceState device) => _SendUpdateDevice(device);
 
-        public void SendUpdateProcessImage(AudioProcessState state, string image) => _SendUpdateProcessImage(state, image);
+        public void SendUpdateProcessImage(AudioProcessState process, string image) => _SendUpdateProcessImage(process, image);
 
-        public void SendUpdateDeviceImage(AudioDeviceState state, string image) => _SendUpdateDeviceImage(state, image);
+        public void SendUpdateDeviceImage(AudioDeviceState device, string image) => _SendUpdateDeviceImage(device, image);
 
         public abstract void OnError(Exception error);
 
@@ -34,6 +37,12 @@ namespace AudiosAmigo
         {
             switch (command?.Action)
             {
+                case "GetAllDevices":
+                    GetAllDevices();
+                    break;
+                case "GetAllProcesses":
+                    GetAllProcesses(Translate.StringToObject<AudioDeviceState>(command.Parameters[0]));
+                    break;
                 case "UpdateProcess":
                     UpdateProcess(Translate.StringToObject<AudioProcessState>(command.Parameters[0]));
                     break;
@@ -55,40 +64,36 @@ namespace AudiosAmigo
         {
             return _subject.Subscribe(observer);
         } 
-
-        private void _SendUpdateProcess(AudioProcessState state) 
+        private void _SendUpdateProcess(AudioProcessState process) 
         {
             _subject.OnNext(new Command
             {
                 Action = "UpdateProcess",
-                Parameters = new string[] { Translate.ObjectToString(state) }
+                Parameters = new string[] { Translate.ObjectToString(process) }
             });
         }
-
-        private void _SendUpdateDevice(AudioDeviceState state) 
+        private void _SendUpdateDevice(AudioDeviceState device) 
         {
             _subject.OnNext(new Command
             {
                 Action = "UpdateDevice",
-                Parameters = new string[] { Translate.ObjectToString(state) }
+                Parameters = new string[] { Translate.ObjectToString(device) }
             });
         }
-
-        private void _SendUpdateProcessImage(AudioProcessState state, string image) 
+        private void _SendUpdateProcessImage(AudioProcessState process, string image) 
         {
             _subject.OnNext(new Command
             {
                 Action = "UpdateProcessImage",
-                Parameters = new string[] { Translate.ObjectToString(state), image }
+                Parameters = new string[] { Translate.ObjectToString(process), image }
             });
         }
-
-        private void _SendUpdateDeviceImage(AudioDeviceState state, string image) 
+        private void _SendUpdateDeviceImage(AudioDeviceState device, string image) 
         {
             _subject.OnNext(new Command
             {
                 Action = "UpdateDeviceImage",
-                Parameters = new string[] { Translate.ObjectToString(state), image }
+                Parameters = new string[] { Translate.ObjectToString(device), image }
             });
         }
         #endregion 

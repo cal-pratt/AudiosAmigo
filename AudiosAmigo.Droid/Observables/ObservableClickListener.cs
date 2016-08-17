@@ -2,7 +2,7 @@ using System;
 using System.Reactive.Subjects;
 using Android.Views;
 
-namespace AudiosAmigo.Droid
+namespace AudiosAmigo.Droid.Observables
 {
     public class ObservableClickListener : Java.Lang.Object, View.IOnClickListener, IObservable<bool>
     {

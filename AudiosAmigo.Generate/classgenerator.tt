@@ -57,7 +57,7 @@ using System.Reactive.Subjects;
 namespace AudiosAmigo
 {<#
     #>
-    public abstract partial class <#=className#> : IObserver<Command>, IObservable<Command>
+    public abstract class <#=className#> : IObserver<Command>, IObservable<Command>
     {
 <#
     foreach (string methodName in rmethods[className].Keys)

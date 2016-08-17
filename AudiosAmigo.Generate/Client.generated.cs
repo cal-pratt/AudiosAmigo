@@ -6,22 +6,25 @@ using System;
 using System.Reactive.Subjects;
 
 namespace AudiosAmigo
-{
-    public abstract partial class Client : IObserver<Command>, IObservable<Command>
+{    public abstract class Client : IObserver<Command>, IObservable<Command>
     {
-        public abstract void UpdateProcess(AudioProcessState state);
+        public abstract void UpdateProcess(AudioProcessState process);
 
-        public abstract void UpdateDevice(AudioDeviceState state);
+        public abstract void UpdateDevice(AudioDeviceState device);
 
-        public abstract void UpdateProcessImage(AudioProcessState state, string image);
+        public abstract void UpdateProcessImage(AudioProcessState process, string image);
 
-        public abstract void UpdateDeviceImage(AudioDeviceState state, string image);
+        public abstract void UpdateDeviceImage(AudioDeviceState device, string image);
 
-        public void SendUpdateProcess(AudioProcessState state) => _SendUpdateProcess(state);
+        public void SendGetAllDevices() => _SendGetAllDevices();
 
-        public void SendUpdateDevice(AudioDeviceState state) => _SendUpdateDevice(state);
+        public void SendGetAllProcesses(AudioDeviceState device) => _SendGetAllProcesses(device);
 
-        public void SendGetProcessImage(AudioProcessState state) => _SendGetProcessImage(state);
+        public void SendUpdateProcess(AudioProcessState process) => _SendUpdateProcess(process);
+
+        public void SendUpdateDevice(AudioDeviceState device) => _SendUpdateDevice(device);
+
+        public void SendGetProcessImage(AudioProcessState process) => _SendGetProcessImage(process);
 
         public void SendGetDeviceImage(AudioDeviceState device) => _SendGetDeviceImage(device);
 
@@ -55,34 +58,46 @@ namespace AudiosAmigo
         {
             return _subject.Subscribe(observer);
         } 
-
-        private void _SendUpdateProcess(AudioProcessState state) 
+        private void _SendGetAllDevices() 
+        {
+            _subject.OnNext(new Command
+            {
+                Action = "GetAllDevices",
+                Parameters = new string[] {  }
+            });
+        }
+        private void _SendGetAllProcesses(AudioDeviceState device) 
+        {
+            _subject.OnNext(new Command
+            {
+                Action = "GetAllProcesses",
+                Parameters = new string[] { Translate.ObjectToString(device) }
+            });
+        }
+        private void _SendUpdateProcess(AudioProcessState process) 
         {
             _subject.OnNext(new Command
             {
                 Action = "UpdateProcess",
-                Parameters = new string[] { Translate.ObjectToString(state) }
+                Parameters = new string[] { Translate.ObjectToString(process) }
             });
         }
-
-        private void _SendUpdateDevice(AudioDeviceState state) 
+        private void _SendUpdateDevice(AudioDeviceState device) 
         {
             _subject.OnNext(new Command
             {
                 Action = "UpdateDevice",
-                Parameters = new string[] { Translate.ObjectToString(state) }
+                Parameters = new string[] { Translate.ObjectToString(device) }
             });
         }
-
-        private void _SendGetProcessImage(AudioProcessState state) 
+        private void _SendGetProcessImage(AudioProcessState process) 
         {
             _subject.OnNext(new Command
             {
                 Action = "GetProcessImage",
-                Parameters = new string[] { Translate.ObjectToString(state) }
+                Parameters = new string[] { Translate.ObjectToString(process) }
             });
         }
-
         private void _SendGetDeviceImage(AudioDeviceState device) 
         {
             _subject.OnNext(new Command

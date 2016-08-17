@@ -104,8 +104,8 @@
     <Compile Include="AudioServer.cs" />
     <Compile Include="ClientAcceptor.cs" />
     <Compile Include="IconExtract.cs" />
-    <Compile Include="ObservableAudioSessionEvents.cs" />
-    <Compile Include="ObservableEndpointVolumeNotification.cs" />
+    <Compile Include="Observables\ObservableAudioSessionEvents.cs" />
+    <Compile Include="Observables\ObservableEndpointVolumeNotification.cs" />
     <Compile Include="Policy\IPolicyConfig.cs" />
     <Compile Include="Policy\PolicyConfig.cs" />
     <Compile Include="Policy\Windows10PolicyConfig.cs" />

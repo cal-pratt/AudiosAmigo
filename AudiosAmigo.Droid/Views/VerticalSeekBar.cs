@@ -6,7 +6,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 
-namespace AudiosAmigo.Droid
+namespace AudiosAmigo.Droid.Views
 {
     public class VerticalSeekBar : SeekBar
     {

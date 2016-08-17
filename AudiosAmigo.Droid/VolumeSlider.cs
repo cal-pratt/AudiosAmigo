@@ -6,6 +6,8 @@ using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
+using AudiosAmigo.Droid.Observables;
+using AudiosAmigo.Droid.Views;
 
 namespace AudiosAmigo.Droid
 {
@@ -13,17 +15,18 @@ namespace AudiosAmigo.Droid
     {
         public LinearLayout Parent { get; }
 
-        private readonly IConnectableObservable<Tuple<float, bool>> _stream;
+        private readonly SupressSubject<Tuple<float, bool>> _subject = 
+            new SupressSubject<Tuple<float, bool>>(new Subject<Tuple<float, bool>>());
 
         private readonly VerticalSeekBar _seekBar;
-
-        private readonly ObservableSeekBarListener _seekbarListener;
 
         private readonly ImageButton _imageButton;
 
         private readonly Bitmap _normalImage;
 
         private readonly Bitmap _muteImage;
+
+        private bool _isMuted;
 
         public VolumeSlider(
             Context context,
@@ -49,6 +52,7 @@ namespace AudiosAmigo.Droid
 
             _normalImage = Bitmap.CreateScaledBitmap(image, width, width, true);
 
+            _isMuted = mute;
             var muteDefault = Bitmap.CreateScaledBitmap(
                 BitmapFactory.DecodeResource(context.Resources, Resource.Drawable.muteblue), 
                 width, width, true);
@@ -69,16 +73,16 @@ namespace AudiosAmigo.Droid
             _seekBar.Max = 100;
             _seekBar.Progress = (int) (volume*100);
 
-            _seekbarListener = new ObservableSeekBarListener(_seekBar);
-            var volumeStream = _seekbarListener
+            var seekbarListener = new ObservableSeekBarListener(_seekBar);
+            var volumeStream = seekbarListener
                 .Select(progress => progress / 100f)
                 .StartWith(volume);
 
             var muteStream = new ObservableClickListener(_imageButton)
-                .Scan(mute, (last, _) => !last)
+                .Scan(mute, (last, _) => _isMuted = !last)
                 .StartWith(mute);
 
-            muteStream.Subscribe(SetMute);
+            muteStream.Subscribe(m => _imageButton.SetImageBitmap(m ? _muteImage : _normalImage));
 
 //      if (Settings.System.GetInt(context.ContentResolver, Settings.System.HapticFeedbackEnabled, 0) != 0)
 //      {
@@ -89,27 +93,30 @@ namespace AudiosAmigo.Droid
             });
 //      }
 
-            _stream = volumeStream.CombineLatest(muteStream, Tuple.Create)
+            _subject.Suppress(1000);
+            volumeStream.CombineLatest(muteStream, Tuple.Create)
                 .Sample(TimeSpan.FromMilliseconds(10))
-                .Publish();
+                .Subscribe(_subject.OnNext);
         }
 
         public void SetVolume(float volume)
         {
-            _seekbarListener.Suppress(1000);
+            _subject.Suppress(1000);
             _seekBar.Progress = (int)(volume * 100);
         }
 
         public void SetMute(bool mute)
         {
-            _imageButton.SetImageBitmap(mute ? _muteImage : _normalImage);
+            _subject.Suppress(1000);
+            if (mute != _isMuted)
+            {
+                _imageButton.PerformClick();
+            }
         }
 
         public IDisposable Subscribe(IObserver<Tuple<float, bool>> observer)
         {
-            var subscription = _stream.Subscribe(observer);
-            _stream.Connect();
-            return subscription;
+            return _subject.Subscribe(observer);
         }
     }
 }

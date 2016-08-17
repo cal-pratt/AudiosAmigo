@@ -44,7 +44,7 @@ namespace AudiosAmigo.Windows
                     .Select(communication => new Communicator<Command>(communication, NewThreadScheduler.Default))
                     .Select(communicator =>
                     {
-                        var handler = new AudioServer();
+                        var handler = new AudioServer(new AudioController());
                         return new CompositeDisposable
                         {
                             communicator.SubscribeOn(NewThreadScheduler.Default).Subscribe(handler),
