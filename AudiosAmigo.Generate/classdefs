@@ -10,19 +10,23 @@
  **/
 
 class Server {
-    rw UpdateProcess(AudioProcessState state)
-    rw UpdateDevice(AudioDeviceState state)
-    r GetProcessImage(AudioProcessState state)
+    r GetAllDevices()
+    r GetAllProcesses(AudioDeviceState device)
+    rw UpdateProcess(AudioProcessState process)
+    rw UpdateDevice(AudioDeviceState device)
+    r GetProcessImage(AudioProcessState process)
     r GetDeviceImage(AudioDeviceState device)
-    w UpdateProcessImage(AudioProcessState state, string image)
-    w UpdateDeviceImage(AudioDeviceState state, string image)
+    w UpdateProcessImage(AudioProcessState process, string image)
+    w UpdateDeviceImage(AudioDeviceState device, string image)
 }
 
 class Client {
-    rw UpdateProcess(AudioProcessState state)
-    rw UpdateDevice(AudioDeviceState state)
-    w GetProcessImage(AudioProcessState state)
+    w GetAllDevices()
+    w GetAllProcesses(AudioDeviceState device)
+    rw UpdateProcess(AudioProcessState process)
+    rw UpdateDevice(AudioDeviceState device)
+    w GetProcessImage(AudioProcessState process)
     w GetDeviceImage(AudioDeviceState device)
-    r UpdateProcessImage(AudioProcessState state, string image)
-    r UpdateDeviceImage(AudioDeviceState state, string image)
+    r UpdateProcessImage(AudioProcessState process, string image)
+    r UpdateDeviceImage(AudioDeviceState device, string image)
 }
