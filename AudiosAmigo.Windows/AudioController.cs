@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reactive.Linq;
 using NAudio.CoreAudioApi;
+using System.Linq;
 
 namespace AudiosAmigo.Windows
 {
@@ -10,6 +11,12 @@ namespace AudiosAmigo.Windows
     {
         private readonly Dictionary<string, AudioDeviceController> _controllerMap =
             new Dictionary<string, AudioDeviceController>();
+
+        public IObservable<AudioProcessState> ProcessStates =>
+            _controllerMap.Values.Select(controller => controller.ProcessStates).Merge();
+
+        public IObservable<AudioDeviceState> DeviceStates =>
+            _controllerMap.Values.Select(controller => controller.State).ToObservable();
 
         private readonly object _lock = new object();
 

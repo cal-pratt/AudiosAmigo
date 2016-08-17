@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reactive.Linq;
+using AudiosAmigo.Windows.Observables;
 using NAudio.CoreAudioApi;
 using NAudio.CoreAudioApi.Interfaces;
 
@@ -9,11 +10,7 @@ namespace AudiosAmigo.Windows
 {
     public class AudioProcessController : IObservable<AudioProcessState>
     {
-        public string Name { get; }
-
-        public string Device { get; }
-
-        public int Pid { get; }
+        public AudioProcessState State { get; private set; }
 
         public Image Image { get; }
 
@@ -23,21 +20,24 @@ namespace AudiosAmigo.Windows
 
         public AudioProcessController(string device, AudioSessionControl session)
         {
-            Device = device;
             _session = session;
-            Pid = (int)_session.GetProcessID;
 
             _events = new ObservableAudioSessionEvents(_session);
 
+            int pid;
+            string name;
+
             if (_session.IsSystemSoundsSession)
             {
-                Name = "System Sounds";
+                pid = AudioProcessState.SystemSoundsPid;
+                name = AudioProcessState.SystemSoundsName;
                 Image = SystemIcons.WinLogo.ToBitmap();
             }
             else
             {
-                var process = Process.GetProcessById(Pid);
-                Name = process.ProcessName;
+                pid = (int)_session.GetProcessID;
+                var process = Process.GetProcessById(pid);
+                name = process.ProcessName;
                 Image = Icon.ExtractAssociatedIcon(process.MainModule.FileName)?.ToBitmap();
                 process.EnableRaisingEvents = true;
                 process.Exited += (sender, args) =>
@@ -46,6 +46,8 @@ namespace AudiosAmigo.Windows
                         AudioSessionDisconnectReason.DisconnectReasonSessionDisconnected);
                 };
             }
+
+            State = new AudioProcessState(name, device, pid);
         }
 
         public void Close()
@@ -56,22 +58,10 @@ namespace AudiosAmigo.Windows
         public IDisposable Subscribe(IObserver<AudioProcessState> observer)
         {
             var states = _events
-                .Select(volumeEvent =>
-                new AudioProcessState
-                {
-                    Name = Name,
-                    Device = Device,
-                    Pid = Pid,
-                    Volume = volumeEvent.Item1,
-                    Mute = volumeEvent.Item2,
-                    IsAlive = true
-                }).Sample(TimeSpan.FromMilliseconds(10));
+                .Select(vol => State = State.SetAudio(vol.Item1, vol.Item2))
+                .Sample(TimeSpan.FromMilliseconds(10));
             return states.Concat(states.LastAsync()
-                .Select(state =>
-                {
-                    state.IsAlive = false;
-                    return state;
-                }))
+                .Select(state => State = state.SetAlive(false)))
                 .Subscribe(observer);
         }
 
