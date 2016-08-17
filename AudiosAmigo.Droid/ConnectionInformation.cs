@@ -6,9 +6,11 @@ using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using Android.App;
 using Android.Content;
+using Android.OS;
 using Android.Provider;
 using Android.Views;
 using Android.Widget;
+using AudiosAmigo.Droid.Observables;
 
 namespace AudiosAmigo.Droid
 {
@@ -53,7 +55,7 @@ namespace AudiosAmigo.Droid
             var searchSet = new HashSet<Java.Lang.String>();
             var udpSubscription = UdpUtil.ReceivePortInfo(Constants.ClientBroadcastListenerPort)
                 .Select(endpoint => new Java.Lang.String($"{endpoint.Address}:{endpoint.Port}"))
-                .Subscribe(session => activity.RunOnUiThread(() =>
+                .Subscribe(session => new Handler(Looper.MainLooper).Post(() =>
                 {
                     if (searchSet.Add(session))
                     {
