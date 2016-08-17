@@ -90,20 +90,22 @@
       <Link>Links\Client.generated.cs</Link>
     </Compile>
     <Compile Include="AudioClient.cs" />
+    <Compile Include="AudioController.cs" />
+    <Compile Include="AudioDeviceVolumeSlider.cs" />
     <Compile Include="AudioDeviceController.cs" />
-    <Compile Include="AudioProcessController.cs" />
+    <Compile Include="AudioProcessVolumeSlider.cs" />
     <Compile Include="ConnectionInformation.cs" />
     <Compile Include="MainActivity.cs">
       <LastGenOutput>MainActivity1.cs</LastGenOutput>
     </Compile>
-    <Compile Include="ObservableClickListener.cs" />
-    <Compile Include="ObservableOnItemClickListener.cs" />
-    <Compile Include="ObservableOnItemLongClickListener.cs" />
-    <Compile Include="ObservableOnTouchListener.cs" />
-    <Compile Include="ObservableSeekBarListener.cs" />
+    <Compile Include="Observables\ObservableClickListener.cs" />
+    <Compile Include="Observables\ObservableOnItemClickListener.cs" />
+    <Compile Include="Observables\ObservableOnItemLongClickListener.cs" />
+    <Compile Include="Observables\ObservableOnTouchListener.cs" />
+    <Compile Include="Observables\ObservableSeekBarListener.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VerticalSeekBar.cs" />
+    <Compile Include="Views\VerticalSeekBar.cs" />
     <Compile Include="VolumeSlider.cs" />
   </ItemGroup>
   <ItemGroup>
