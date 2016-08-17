@@ -1,7 +1,5 @@
 using System;
 using System.Reactive.Linq;
-using Android.Content;
-using Android.Graphics;
 using Android.Views;
 
 namespace AudiosAmigo.Droid
@@ -14,19 +12,17 @@ namespace AudiosAmigo.Droid
 
         public AudioDeviceState State { get; private set; }
 
-        public AudioDeviceVolumeSlider(
-            Context context,
-            AudioDeviceState device,
-            int width, int height, Bitmap image)
+        public AudioDeviceVolumeSlider(AudioDeviceState device, VolumeSlider slider)
         {
             State = device;
-            _slider = new VolumeSlider(context, device.Volume, device.Mute, width, height, image);
+            _slider = slider;
+            Update(State);
         }
 
         public void Update(AudioDeviceState device)
         {
-            _slider.SetVolume(device.Volume);
-            _slider.SetMute(device.Mute);
+            _slider.Volume = device.Volume;
+            _slider.Mute = device.Mute;
         }
 
         public IDisposable Subscribe(IObserver<AudioDeviceState> observer)
