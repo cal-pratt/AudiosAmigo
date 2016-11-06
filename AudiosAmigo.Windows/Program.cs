@@ -13,12 +13,27 @@ namespace AudiosAmigo.Windows
         [STAThread]
         public static void Main()
         {
-            var passHash = Translate.ByteArrayToBase64String(PasswordUtil.PbkdfHash(
-                Translate.StringToByteArray(Constants.DefaultSessionPassword),
-                Constants.PasswordSalt,
-                Constants.PasswordIterations,
-                Constants.PasswordLength));
-            var subscriptions = Begin(Constants.DefaultServerTcpListenerPort, passHash);
+            var subscriptions = new CompositeDisposable
+            {
+                Begin(AppSettings.Port, AppSettings.Password)
+            };
+            var systemTrayIcon = new SystemTrayIcon();
+            var settingsForm = new SettingsForm();
+            systemTrayIcon.ExitClicked += (sender, args) =>
+            {
+                subscriptions.Dispose();
+                Application.Exit();
+                Environment.Exit(0);
+            };
+            systemTrayIcon.SettingsClicked += (sender, args) =>
+            {
+                settingsForm.Show();
+            };
+            settingsForm.SettingsApplied += (sender, args) =>
+            {
+                subscriptions.Clear();
+                subscriptions.Add(Begin(AppSettings.Port, AppSettings.Password));
+            };
             Application.Run();
         }
 
@@ -28,12 +43,9 @@ namespace AudiosAmigo.Windows
             return new CompositeDisposable
             {
                 UdpUtil.ReceivePortInfo(Constants.ServerBroadcastListenerPort)
-                    .ObserveOn(NewThreadScheduler.Default)
-                    .SubscribeOn(NewThreadScheduler.Default)
                     .Subscribe(UdpUtil.IntWriter(serverTcpListenerPort)),
 
                 ClientAcceptor.From(serverTcpListenerPort)
-                    .ObserveOn(NewThreadScheduler.Default).SubscribeOn(NewThreadScheduler.Default)
                     .Select(client => new SecureTcpClientCommunication(
                         new TcpClientCommunication(client), new Encrpytion(password, Constants.EncrpytionInitVector)))
                     .Scan((INetworkCommunication) null, (last, next) =>
