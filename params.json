@@ -1,6 +1,6 @@
 {
   "name": "Audios Amigo",
   "tagline": " Say Adiós Amigo to Windows volume mixer and say Hello to Audio's Amigo.",
-  "body": "### Control per-application volume on Windows using an Android device!\r\n\r\n![image](https://cloud.githubusercontent.com/assets/7611406/20158262/54ca56ea-a6a7-11e6-983b-3093774df767.png)\r\n\r\nAudio's Amigo provides a mobile interface for controlling per-application volume for every sound device connected to your Windows system. Requires a WIFI connection between your phone and computer.\r\n",
+  "body": "![image](https://cloud.githubusercontent.com/assets/7611406/20158262/54ca56ea-a6a7-11e6-983b-3093774df767.png)\r\n\r\nAudio's Amigo provides a mobile interface for controlling per-application volume for every sound device connected to your Windows system. Requires a WIFI connection between your phone and computer.\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
