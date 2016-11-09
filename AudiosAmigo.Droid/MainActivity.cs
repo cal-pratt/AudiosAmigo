@@ -13,7 +13,7 @@ using AudiosAmigo.Droid.Observables;
 
 namespace AudiosAmigo.Droid
 {
-    [Activity(Label = "AudiosAmigo.Droid", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Audio's Amigo", MainLauncher = true, Icon = "@drawable/audio_icon")]
     public class MainActivity : Activity
     {
         private const float SliderWidthRatio = 0.18f;
@@ -44,8 +44,8 @@ namespace AudiosAmigo.Droid
             var height = FindViewById(Resource.Id.slider_scroll).Height;
             var width = (int) (height*SliderWidthRatio);
 
-            var systemBitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.audiosrv);
-            var muteBitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.muteblue);
+            var systemBitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.system_sound);
+            var muteBitmap = BitmapFactory.DecodeResource(Resources, Resource.Drawable.mute);
 
             var inflater = (LayoutInflater) GetSystemService(LayoutInflaterService);
             var vibrator = (Vibrator) GetSystemService(VibratorService);

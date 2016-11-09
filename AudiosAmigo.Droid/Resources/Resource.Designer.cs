@@ -63,43 +63,31 @@ namespace AudiosAmigo.Droid
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int audiosrv = 2130837504;
+			public const int audio_icon = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int bg = 2130837505;
+			public const int empty_vdivider = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int bg2 = 2130837506;
+			public const int hdivider = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int bg_connect_menu = 2130837507;
+			public const int main_background = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int bgmain = 2130837508;
+			public const int mute = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int empty_vdivider = 2130837509;
+			public const int slider_background = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int hdivider = 2130837510;
+			public const int slider_thumb = 2130837510;
 			
 			// aapt resource value: 0x7f020007
-			public const int Icon = 2130837511;
+			public const int system_sound = 2130837511;
 			
 			// aapt resource value: 0x7f020008
-			public const int mute = 2130837512;
-			
-			// aapt resource value: 0x7f020009
-			public const int muteblue = 2130837513;
-			
-			// aapt resource value: 0x7f02000a
-			public const int thumb = 2130837514;
-			
-			// aapt resource value: 0x7f02000b
-			public const int thumb_small = 2130837515;
-			
-			// aapt resource value: 0x7f02000c
-			public const int vdivider = 2130837516;
+			public const int vdivider = 2130837512;
 			
 			static Drawable()
 			{
