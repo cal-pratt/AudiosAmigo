@@ -14,6 +14,6 @@
     <string name="connect_menu_confirm_delete_pos">Delete</string>
     <string name="connect_menu_confirm_delete_neg">Cancel</string>
     <string name="connect_menu_confirm_delete_msg">Delete saved session from list?</string>
-
+    <string name="admob_adUnitId">ca-app-pub-2303408535039725/7523897891</string>
     <string name="preference_save_file_key">AudiosAmigoSavedSessions</string>
 </resources>
