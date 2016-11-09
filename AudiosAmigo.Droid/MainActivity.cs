@@ -4,6 +4,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Android.App;
 using Android.Content.PM;
+using Android.Gms.Ads;
 using Android.Graphics;
 using Android.Widget;
 using Android.OS;
@@ -22,6 +23,10 @@ namespace AudiosAmigo.Droid
             base.OnCreate(bundle);
             RequestedOrientation = ScreenOrientation.SensorLandscape;
             SetContentView(Resource.Layout.Main);
+
+            var adView = FindViewById<AdView>(Resource.Id.adView);
+            MobileAds.Initialize(ApplicationContext, adView.AdUnitId);
+            adView.LoadAd(new AdRequest.Builder().Build());
 
             var ipAddress = FindViewById<TextView>(Resource.Id.ip_address);
             var connectInfo = ConnectionInformation.FromDiaglog(this);
