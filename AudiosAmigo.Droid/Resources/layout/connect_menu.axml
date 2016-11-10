@@ -45,8 +45,8 @@
             android:singleLine="true"
             android:layout_gravity="start" />
         <TextView
-            android:enabled="false"
             android:id="@+id/welcome"
+            android:autoLink="web"
             android:text="@string/connect_menu_welcome_message"
             android:layout_width="fill_parent"
             android:layout_height="0dp"

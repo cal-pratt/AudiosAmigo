@@ -4,7 +4,7 @@
     <string name="connect_menu_ip_hint">IP</string>
     <string name="connect_menu_port_hint">PORT</string>
     <string name="connect_menu_password_hint">PASSWORD</string>
-    <string name="connect_menu_welcome_message">Welcome to Audio\'s Amigo! To use this application, you must first install the desktop application.\n\nIf you haven\'t already done so, you can find the installer at http://www.getawebsite.com</string>
+    <string name="connect_menu_welcome_message">Welcome to Audio\'s Amigo! To use this application, you must first install the desktop application.\n\nIf you haven\'t already done so, you can find the installer at www.audiosamigo.com</string>
     <string name="connect_menu_connect_text">Connect</string>
     <string name="connect_menu_save_text">Save</string>
     <string name="connect_menu_search_text">Scan Network</string>
