@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Encrpytion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PasswordUtil.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SecureTcpClientCommunication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecureClientCommunication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SupressSubject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UdpUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Command.cs" />
