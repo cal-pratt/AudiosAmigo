@@ -1,14 +1,12 @@
-﻿using System.Net.Sockets;
-
-namespace AudiosAmigo
+﻿namespace AudiosAmigo
 {
-    public class SecureTcpClientCommunication : INetworkCommunication
+    public class SecureClientCommunication : INetworkCommunication
     {
         private readonly Encrpytion _encrpytion;
 
-        private readonly TcpClientCommunication _communication;
+        private readonly INetworkCommunication _communication;
 
-        public SecureTcpClientCommunication(TcpClientCommunication communication, Encrpytion encrpytion)
+        public SecureClientCommunication(INetworkCommunication communication, Encrpytion encrpytion)
         {
             _encrpytion = encrpytion;
             _communication = communication;
@@ -34,9 +32,9 @@ namespace AudiosAmigo
             _communication.SendBytes(_encrpytion.Encrypt(buffer));
         }
 
-        public void Close()
+        public void Dispose()
         {
-            _communication.Close();
+            _communication.Dispose();
         }
     }
 }
