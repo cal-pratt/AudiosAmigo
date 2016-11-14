@@ -1,8 +1,10 @@
 using System;
+using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 
 namespace AudiosAmigo
 {
@@ -17,23 +19,25 @@ namespace AudiosAmigo
         public Communicator(INetworkCommunication communication, IScheduler scheduler)
         {
             _communication = communication;
+            var running = true;
             _input = Observable.Create<T>(
                 observer =>
                 {
-                    try
+                    Task.Run(async () =>
                     {
-                        while (true)
+                        await Task.Yield();
+                        while (running)
                         {
                             var s = Translate.StringToObject<T>(_communication.Receive());
                             observer.OnNext(s);
                         }
-                    }
-                    catch (Exception e)
+                        observer.OnCompleted();
+                    });
+                    return Disposable.Create(() =>
                     {
-                        Console.WriteLine($"{e}: {e.Message}\n{e.StackTrace}");
-                    }
-                    observer.OnCompleted();
-                    return Disposable.Empty;
+                        running = false;
+                        _communication.Dispose();
+                    });
                 }).ObserveOn(scheduler).Publish();
         }
 
@@ -54,7 +58,7 @@ namespace AudiosAmigo
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"{e}: {e.Message}\n{e.StackTrace}");
+                    OnError(e);
                 }
             }
         }
