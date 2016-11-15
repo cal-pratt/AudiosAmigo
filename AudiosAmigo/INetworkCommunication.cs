@@ -1,6 +1,8 @@
+using System;
+
 namespace AudiosAmigo
 {
-    public interface INetworkCommunication
+    public interface INetworkCommunication : IDisposable
     {
         string Receive();
 
@@ -9,7 +11,5 @@ namespace AudiosAmigo
         void Send(string text);
 
         void SendBytes(byte[] buffer);
-
-        void Close();
     }
 }

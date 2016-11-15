@@ -72,14 +72,15 @@ namespace AudiosAmigo.Droid
             var handler = new AudioClient(controller);
 
             var client = new TcpClient(ip, port);
-            var communication = new SecureTcpClientCommunication(
+            var communication = new SecureClientCommunication(
                 new TcpClientCommunication(client),
                 new Encrpytion(password, Constants.EncrpytionInitVector));
             var communicator = new Communicator<Command>(
                 communication, NewThreadScheduler.Default);
 
-            communicator.SubscribeOn(NewThreadScheduler.Default).Subscribe(handler);
-            handler.SubscribeOn(NewThreadScheduler.Default).Subscribe(communicator);
+            communicator.Subscribe(handler);
+            handler.Subscribe(communicator);
+            handler.SendGetAllDevices();
         }
     }
 }

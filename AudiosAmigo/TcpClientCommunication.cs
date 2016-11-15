@@ -62,7 +62,7 @@ namespace AudiosAmigo
             _stream.Write(buffer, 0, buffer.Length);
         }
 
-        public void Close()
+        public void Dispose()
         {
             _stream.Close();
         }

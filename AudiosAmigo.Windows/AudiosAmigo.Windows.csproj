@@ -104,6 +104,7 @@
     <Compile Include="AudioProcessController.cs" />
     <Compile Include="AudioServer.cs" />
     <Compile Include="ClientAcceptor.cs" />
+    <Compile Include="NetworkSessionManager.cs" />
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
