@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="AudiosAmigo.Droid" android:versionCode="1" android:versionName="v1.0.0" android:installLocation="auto">
-	<uses-sdk android:minSdkVersion="16" />
+	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="24" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
-	<application android:label="AudiosAmigo" android:theme="@android:style/Theme.Holo.NoActionBar" android:icon="@drawable/audio_icon">
+	<application android:label="AudiosAmigo" android:theme="@style/AudiosAmigoTheme" android:icon="@drawable/audio_icon">
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 		<activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 	</application>

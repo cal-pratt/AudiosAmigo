@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <style name="AudiosAmigoTheme" parent="AudiosAmigoTheme.Base">
+  </style>
+  <style name="AudiosAmigoTheme.Base" parent="Theme.AppCompat">
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primaryDark</item>
+    <item name="colorAccent">@color/accent</item>
+    <item name="windowNoTitle">true</item>
+    <item name="windowActionBar">false</item>
+    <item name="android:buttonStyle">@style/ButtonStyle</item>
+  </style>
+  <style name="ButtonStyle">
+    <item name="android:textColor">@color/primaryText</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:background">@drawable/ButtonSelector</item>
+    <item name="android:gravity">center</item>
+  </style>
+</resources>
