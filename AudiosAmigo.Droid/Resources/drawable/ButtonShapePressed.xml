@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="3dp"
+    android:insetRight="3dp"
+    android:insetTop="3dp"
+    android:insetBottom="3dp" >
+  <shape android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:endColor="@color/primaryDark"
+        android:startColor="@color/primary" />
+    <corners android:radius="3dp" />
+    <stroke
+        android:width="2px"
+        android:color="@color/primaryLight" />
+  </shape>
+</inset>

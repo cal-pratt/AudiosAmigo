@@ -18,7 +18,7 @@ namespace AudiosAmigo.Droid
     {
         public static IObservable<Tuple<string, int, string>> FromDiaglog(Activity activity)
         {
-            var dialog = new Dialog(activity, Android.Resource.Style.ThemeHoloNoActionBar);
+            var dialog = new Dialog(activity, Resource.Style.AudiosAmigoTheme);
             dialog.Window.SetSoftInputMode(SoftInput.AdjustPan);
             dialog.SetContentView(Resource.Layout.connect_menu);
             dialog.SetCancelable(false);

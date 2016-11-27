@@ -8,13 +8,14 @@ using Android.Gms.Ads;
 using Android.Graphics;
 using Android.Widget;
 using Android.OS;
+using Android.Support.V7.App;
 using Android.Views;
 using AudiosAmigo.Droid.Observables;
 
 namespace AudiosAmigo.Droid
 {
     [Activity(Label = "Audio's Amigo", MainLauncher = true, Icon = "@drawable/audio_icon")]
-    public class MainActivity : Activity
+    public class MainActivity : AppCompatActivity
     {
         private const float SliderWidthRatio = 0.18f;
 

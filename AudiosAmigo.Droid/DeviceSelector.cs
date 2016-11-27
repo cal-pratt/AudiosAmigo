@@ -26,6 +26,12 @@ namespace AudiosAmigo.Droid
             public DeviceSelector Build(Bitmap image)
             {
                 var imageButton = (ImageButton)_inflater.Inflate(Resource.Layout.device_selector, null);
+                imageButton.LayoutParameters = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MatchParent,
+                    ViewGroup.LayoutParams.WrapContent)
+                {
+                    Height = (int) (_height*1.5),
+                };
                 imageButton.SetImageBitmap(Bitmap.CreateScaledBitmap(image, _width, _height, true));
                 return new DeviceSelector(imageButton);
             }
