@@ -14,7 +14,7 @@ using AudiosAmigo.Droid.Observables;
 
 namespace AudiosAmigo.Droid
 {
-    [Activity(Label = "Audio's Amigo", MainLauncher = true, Icon = "@drawable/audio_icon")]
+    [Activity(Label = "Audio's Amigo")]
     public class MainActivity : AppCompatActivity
     {
         private const float SliderWidthRatio = 0.18f;

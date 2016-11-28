@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    android:gravity="center_horizontal"
+    android:padding="24dp"
+    android:showDividers="middle"
+    android:divider="@drawable/hdivider">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/vdivider"
+        android:layout_margin="8dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/audio_icon"
+            android:layout_margin="8dp" />
+        <TextView
+            android:enabled="false"
+            android:text="Audio's Amigo"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="32sp"
+            android:layout_margin="8dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+        <TextView
+            android:autoLink="web"
+            android:text="@string/connect_menu_welcome_message"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_margin="16dp" />
+        <Button
+            android:text="Setup WIFI Connection"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:id="@+id/setup_button" />
+        <Button
+            android:text="Scan WIFI Connections"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:id="@+id/search_button" />
+        <Button
+            android:text="Open Last Connection"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:id="@+id/connect_button" />
+    </LinearLayout>
+</LinearLayout>

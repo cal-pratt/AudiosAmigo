@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/card_view"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        app:cardMaxElevation="4dp" >
+        <android.support.v7.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:columnCount="3"
+            app:orientation="horizontal"
+            app:rowCount="2">
+            <TextView
+                android:id="@+id/name_label"
+                android:text="NAME"
+                app:layout_columnWeight="1"
+                android:padding="8dp" />
+            <TextView
+                android:id="@+id/ip_address_label"
+                android:text="IP ADDRESS"
+                app:layout_columnWeight="1"
+                android:padding="8dp" />
+            <TextView
+                android:id="@+id/port_label"
+                android:text="PORT"
+                app:layout_columnWeight="1"
+                android:padding="8dp" />
+            <TextView
+                android:id="@+id/name"
+                app:layout_columnWeight="1"
+                android:padding="8dp" />
+            <TextView
+                android:id="@+id/ip_address"
+                app:layout_columnWeight="1"
+                android:padding="8dp" />
+            <TextView
+                android:id="@+id/port"
+                app:layout_columnWeight="1"
+                android:padding="8dp" />
+        </android.support.v7.widget.GridLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

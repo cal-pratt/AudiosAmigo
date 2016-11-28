@@ -9,7 +9,7 @@
             android:angle="270"
             android:endColor="@color/primary"
             android:startColor="@color/primaryLight" />
-        <corners android:radius="3dp" />
+        <corners android:radius="1dp" />
         <stroke
             android:width="2px"
             android:color="@color/primaryLight" />
